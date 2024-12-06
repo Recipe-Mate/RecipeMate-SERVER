@@ -1,5 +1,7 @@
 package org.chefcrew.food.repository;
 
+import static org.chefcrew.food.entity.QFood.food;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -15,7 +17,15 @@ public class FoodRepository {
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }
-    public void saveFoodList(List<Food> foodList){
+
+    public void saveFoodList(List<Food> foodList) {
         em.persist(foodList);
+    }
+
+    //특정 유저가 소유한 식재료 조회
+    public List<Food> findByUserId(long userId) {
+        return query.selectFrom(food)
+                .where(food.userId.eq(userId))
+                .fetch();
     }
 }
