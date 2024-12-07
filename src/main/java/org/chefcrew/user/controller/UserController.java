@@ -3,6 +3,7 @@ package org.chefcrew.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.chefcrew.user.dto.request.SignUpRequest;
 import org.chefcrew.user.dto.response.GetUserInfoResponse;
+import org.chefcrew.user.dto.response.LoginResponse;
 import org.chefcrew.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,5 +28,10 @@ public class UserController {
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest requestBody) {
         userService.addUser(requestBody);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<LoginResponse> login(@RequestBody SignUpRequest requestBody){
+        return ResponseEntity.ok(userService.login(requestBody));
     }
 }
