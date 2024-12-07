@@ -1,7 +1,7 @@
 package org.chefcrew.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.chefcrew.user.dto.request.LoginRequest;
+import org.chefcrew.user.dto.request.SignUpRequest;
 import org.chefcrew.user.dto.response.GetUserInfoResponse;
 import org.chefcrew.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@RequestBody LoginRequest requestBody) {
+    public ResponseEntity<Void> signUp(@RequestBody SignUpRequest requestBody) {
         userService.addUser(requestBody);
         return ResponseEntity.ok().build();
     }
