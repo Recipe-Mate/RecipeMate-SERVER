@@ -4,8 +4,8 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.chefcrew.food.dto.request.AddFoodRequest;
 import org.chefcrew.food.dto.request.DeleteFoodRequest;
-import org.chefcrew.food.dto.request.FoodAddRequest;
 import org.chefcrew.food.entity.Food;
 import org.chefcrew.food.repository.FoodRepository;
 import org.springframework.stereotype.Service;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 public class FoodService {
     public final FoodRepository foodRepository;
 
-    public void saveFoodList(FoodAddRequest foodAddRequest) {
-        List<Food> foodDataList = foodAddRequest.foodNameList().stream()
-                .map(name -> new Food(name, foodAddRequest.userId()))
+    public void saveFoodList(AddFoodRequest addFoodRequest) {
+        List<Food> foodDataList = addFoodRequest.foodNameList().stream()
+                .map(name -> new Food(name, addFoodRequest.userId()))
                 .toList();
         foodRepository.saveFoodList(foodDataList);
     }
