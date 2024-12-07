@@ -16,13 +16,27 @@ public class UserRepository {
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }
-    public void addUser(User user){
+    public void addUser(User user) {
         em.persist(user);
     }
 
-    public User findById(long userId){
+    public User findById(long userId) {
         return query.selectFrom(user)
                 .where(user.userId.eq(userId))
+                .fetchFirst();
+    }
+
+    public boolean existByEmail(String email) {
+        Long count = query.select(user.count())
+                .from(user)
+                .where(user.email.eq(email))
+                .fetchOne();
+        return count != null && count > 0;
+    }
+
+    public User findByEmail(String email) {
+        return query.selectFrom(user)
+                .where(user.email.eq(email))
                 .fetchFirst();
     }
 }
