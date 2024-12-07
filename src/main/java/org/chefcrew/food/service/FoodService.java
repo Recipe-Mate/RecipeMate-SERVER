@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 public class FoodService {
     public final FoodRepository foodRepository;
 
-    public void saveFoodList(AddFoodRequest addFoodRequest) {
-        List<Food> foodDataList = addFoodRequest.foodNameList().stream()
-                .map(name -> new Food(name, addFoodRequest.userId()))
+    public void saveFoodList(AddFoodRequest foodAddRequest) {
+        List<Food> foodDataList = foodAddRequest.foodNameList().stream()
+                .map(name -> new Food(name, foodAddRequest.userId()))
                 .toList();
         foodRepository.saveFoodList(foodDataList);
     }
@@ -34,6 +34,6 @@ public class FoodService {
     }
 
     public void deleteFood(DeleteFoodRequest deleteFoodRequest) {
-        foodRepository.deleteFoodList(deleteFoodRequest.foodNameList());
+        foodRepository.deleteFood(deleteFoodRequest.foodNameList());
     }
 }
