@@ -33,4 +33,10 @@ public class UserRepository {
                 .fetchOne();
         return count != null && count > 0;
     }
+
+    public User findByEmail(String email) {
+        return query.selectFrom(user)
+                .where(user.email.eq(email))
+                .fetchFirst();
+    }
 }
