@@ -24,13 +24,13 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserInfo(userId));
     }
 
-    @PostMapping
+    @PostMapping("/post")
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest requestBody) {
         userService.addUser(requestBody);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody SignUpRequest requestBody){
         return ResponseEntity.ok(userService.login(requestBody));
     }
