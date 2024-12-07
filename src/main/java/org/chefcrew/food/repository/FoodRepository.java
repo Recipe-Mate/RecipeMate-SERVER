@@ -2,6 +2,7 @@ package org.chefcrew.food.repository;
 
 import static org.chefcrew.food.entity.QFood.food;
 
+import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -27,5 +28,11 @@ public class FoodRepository {
         return query.selectFrom(food)
                 .where(food.userId.eq(userId))
                 .fetch();
+    }
+
+    public void deleteFood(List<String> foodNameList){
+        new JPADeleteClause(em, food)
+                .where(food.foodName.in(foodNameList))
+                .execute();
     }
 }
