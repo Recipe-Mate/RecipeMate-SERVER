@@ -4,7 +4,8 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.chefcrew.food.dto.request.FoodAddRequest;
+import org.chefcrew.food.dto.request.AddFoodRequest;
+import org.chefcrew.food.dto.request.DeleteFoodRequest;
 import org.chefcrew.food.entity.Food;
 import org.chefcrew.food.repository.FoodRepository;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,9 @@ public class FoodService {
         } else {
             return null;
         }
+    }
+
+    public void deleteFood(DeleteFoodRequest deleteFoodRequest){
+        foodRepository.deleteFood(deleteFoodRequest.foodNameList());
     }
 }
