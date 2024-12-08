@@ -35,4 +35,14 @@ public class FoodRepository {
                 .where(food.foodName.in(foodNameList))
                 .execute();
     }
+
+    public boolean existsByFoodNameAndUserId(String foodName, long userId) {
+        Integer count = query.selectOne()
+                .from(food)
+                .where(food.foodName.eq(foodName)
+                        .and(food.userId.eq(userId)))
+                .fetchFirst();
+        return count != null && count > 0;
+
+    }
 }

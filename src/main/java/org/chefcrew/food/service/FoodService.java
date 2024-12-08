@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 public class FoodService {
     public final FoodRepository foodRepository;
 
+    @Transactional
     public void saveFoodList(AddFoodRequest foodAddRequest) {
         List<Food> foodDataList = foodAddRequest.foodNameList().stream()
+                .filter(name -> !foodRepository.existsByFoodNameAndUserId(name, foodAddRequest.userId()))
                 .map(name -> new Food(name, foodAddRequest.userId()))
                 .toList();
         foodDataList.forEach(foodRepository::saveFood);
