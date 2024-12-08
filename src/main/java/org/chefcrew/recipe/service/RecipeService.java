@@ -63,7 +63,9 @@ public class RecipeService {
 
         List<Recipe> recipeList = recipeResponseList.stream()
                 .map(recipeData -> new Recipe(recipeData.recipeName(),
-                        Arrays.stream(recipeData.partsDetails().split(",")).toList(),
+                        Arrays.stream(recipeData.partsDetails().split("\n|, |,"))
+                                .map(food -> food.contains(":")? food.split(": ")[1]: food)
+                                .toList(),
                         recipeData.getManuals(),
                         recipeData.getManualImages(),
                         recipeData.infoCal(),
