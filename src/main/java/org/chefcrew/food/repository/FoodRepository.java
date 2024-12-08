@@ -19,7 +19,7 @@ public class FoodRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public void saveFoodList(List<Food> foodList) {
+    public void saveFood(Food foodList) {
         em.persist(foodList);
     }
 
@@ -30,7 +30,7 @@ public class FoodRepository {
                 .fetch();
     }
 
-    public void deleteFood(List<String> foodNameList){
+    public void deleteFood(List<String> foodNameList) {
         new JPADeleteClause(em, food)
                 .where(food.foodName.in(foodNameList))
                 .execute();

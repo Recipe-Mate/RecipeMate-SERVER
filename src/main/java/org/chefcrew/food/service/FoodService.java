@@ -20,7 +20,7 @@ public class FoodService {
         List<Food> foodDataList = foodAddRequest.foodNameList().stream()
                 .map(name -> new Food(name, foodAddRequest.userId()))
                 .toList();
-        foodRepository.saveFoodList(foodDataList);
+        foodDataList.forEach(foodRepository::saveFood);
     }
 
     public List<String> getOwnedFoodList(long userId) {
