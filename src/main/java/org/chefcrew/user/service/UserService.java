@@ -22,6 +22,9 @@ public class UserService {
 
     public GetUserInfoResponse getUserInfo(long userId) {
         User user = userRepository.findById(userId);
+        if (user == null) {
+            throw new CustomException(USER_NOT_FOUND);
+        }
         return new GetUserInfoResponse(user.getUserId(), user.getUserName(), user.getEmail());
     }
 
