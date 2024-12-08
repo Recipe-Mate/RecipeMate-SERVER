@@ -13,7 +13,6 @@ import org.chefcrew.recipe.dto.response.GetRecipeResponse;
 import org.chefcrew.recipe.enums.ValueOption;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -79,11 +78,11 @@ public class RecipeService {
 
     private boolean isAppriateRecipe(Boolean finalCalorieHigh, Boolean finalFatHigh, Boolean finalNatriumHigh,
                                      Boolean finalProtienHigh, Boolean finalCarbohydrateHigh, RecipeData recipeData) {
-        return (finalCalorieHigh != null || finalCalorieHigh == isCalorieHigh(recipeData.infoCal()))
-                && (finalFatHigh != null || finalFatHigh == isFatHigh(recipeData.infoFat()))
-                && (finalNatriumHigh != null || finalNatriumHigh == isNatriumHigh(recipeData.infoFat()))
-                && (finalProtienHigh != null || finalProtienHigh == isProtienHigh(recipeData.infoFat()))
-                && (finalCarbohydrateHigh != null || finalCarbohydrateHigh == isCarbohydrateHigh(recipeData.infoFat()));
+        return (finalCalorieHigh == null || finalCalorieHigh == isCalorieHigh(recipeData.infoCal()))
+                && (finalFatHigh == null || finalFatHigh == isFatHigh(recipeData.infoFat()))
+                && (finalNatriumHigh == null || finalNatriumHigh == isNatriumHigh(recipeData.infoFat()))
+                && (finalProtienHigh == null || finalProtienHigh == isProtienHigh(recipeData.infoFat()))
+                && (finalCarbohydrateHigh == null || finalCarbohydrateHigh == isCarbohydrateHigh(recipeData.infoFat()));
     }
 
     private boolean isCalorieHigh(float calorie) {
