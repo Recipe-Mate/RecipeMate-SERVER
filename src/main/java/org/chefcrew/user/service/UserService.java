@@ -25,6 +25,7 @@ public class UserService {
         return new GetUserInfoResponse(user.getUserId(), user.getUserName(), user.getEmail());
     }
 
+    @Transactional
     public void addUser(SignUpRequest signUpRequest) {
         if (isDuplicateEmail(signUpRequest.email())) {
             throw new CustomException(ALREADY_EXIST_EMAIL);
