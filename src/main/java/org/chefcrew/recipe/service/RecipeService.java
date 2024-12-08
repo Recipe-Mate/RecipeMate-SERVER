@@ -82,17 +82,17 @@ public class RecipeService {
                                      Boolean finalProtienHigh, Boolean finalCarbohydrateHigh, RecipeData recipeData) {
         return (finalCalorieHigh == null || finalCalorieHigh == isCalorieHigh(recipeData.infoCal()))
                 && (finalFatHigh == null || finalFatHigh == isFatHigh(recipeData.infoFat()))
-                && (finalNatriumHigh == null || finalNatriumHigh == isNatriumHigh(recipeData.infoFat()))
-                && (finalProtienHigh == null || finalProtienHigh == isProtienHigh(recipeData.infoFat()))
-                && (finalCarbohydrateHigh == null || finalCarbohydrateHigh == isCarbohydrateHigh(recipeData.infoFat()));
+                && (finalNatriumHigh == null || finalNatriumHigh == isNatriumHigh(recipeData.infoNa()))
+                && (finalProtienHigh == null || finalProtienHigh == isProtienHigh(recipeData.infoPro()))
+                && (finalCarbohydrateHigh == null || finalCarbohydrateHigh == isCarbohydrateHigh(recipeData.infoCar()));
     }
 
     private boolean isCalorieHigh(float calorie) {
         return calorie > 700;
     }
 
-    private boolean isFatHigh(float calorie) {
-        return calorie > 700;
+    private boolean isFatHigh(float fat) {
+        return fat > 10;
     }
 
     private boolean isNatriumHigh(float natrium) {
@@ -100,11 +100,11 @@ public class RecipeService {
     }
 
     private boolean isProtienHigh(float protien) {
-        return protien > 20;
+        return protien > 10;
     }
 
     private boolean isCarbohydrateHigh(float carbohydrate) {
-        return carbohydrate > 60;
+        return carbohydrate > 100;
     }
 
     //공공데이터 서버에 재료 사용한 메뉴 정보 조회
