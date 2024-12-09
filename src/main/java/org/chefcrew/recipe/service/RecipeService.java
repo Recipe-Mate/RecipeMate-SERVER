@@ -1,10 +1,13 @@
 package org.chefcrew.recipe.service;
 
+import static org.chefcrew.common.exception.ErrorException.OPEN_API_SERVER_ERROR;
+
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.recipe.domain.Recipe;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse;
@@ -54,6 +57,8 @@ public class RecipeService {
         Boolean finalNatriumHigh = natriumHigh;
         Boolean finalProtienHigh = protienHigh;
         Boolean finalCarbohydrateHigh = carbohydrateHigh;
+        if(getRecipeOpenResponse.cookRcpInfo().row() == null)
+            throw new CustomException(OPEN_API_SERVER_ERROR);
         List<RecipeData> recipeResponseList = getRecipeOpenResponse.cookRcpInfo().row()
                 .stream()
                 .filter(recipeData -> (isAppriateRecipe(finalCalorieHigh, finalFatHigh, finalNatriumHigh,
