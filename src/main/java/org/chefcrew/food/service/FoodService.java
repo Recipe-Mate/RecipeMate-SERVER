@@ -28,7 +28,9 @@ public class FoodService {
                 .filter(name -> !foodRepository.existsByFoodNameAndUserId(name, foodAddRequest.userId()))
                 .map(name -> new Food(name, foodAddRequest.userId()))
                 .toList();
-        foodDataList.forEach(foodRepository::saveFood);
+        if (foodDataList != null) {
+            foodDataList.forEach(foodRepository::saveFood);
+        }
     }
 
     private void validateUser(long userId) {
