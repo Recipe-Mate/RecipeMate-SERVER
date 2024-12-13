@@ -39,6 +39,9 @@ public class FoodService {
 
     public List<String> getOwnedFoodList(long userId) {
         validateUser(userId);
+        if (!foodRepository.existsByUserId(userId)) {
+            return null;
+        }
         List<Food> foodList = foodRepository.findByUserId(userId);
         if (foodList != null) {
             return foodList.stream().map(food -> food.getFoodName())
@@ -49,6 +52,6 @@ public class FoodService {
     }
 
     public void deleteFood(DeleteFoodRequest deleteFoodRequest) {
-        foodRepository.deleteFood(deleteFoodRequest.foodNameList());
+        foodRepository.deleteFood(deleteFoodRequest.userId(), deleteFoodRequest.foodNameList());
     }
 }
