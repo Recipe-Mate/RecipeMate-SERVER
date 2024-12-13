@@ -30,7 +30,15 @@ public class FoodRepository {
                 .fetch();
     }
 
-    public void deleteFood(List<String> foodNameList) {
+    public boolean existsByUserId(long userId){
+        Integer count = query.selectOne()
+                .from(food)
+                .where(food.userId.eq(userId))
+                .fetchFirst();
+        return count != null && count > 0;
+    }
+
+    public void deleteFood(long userId, List<String> foodNameList) {
         new JPADeleteClause(em, food)
                 .where(food.foodName.in(foodNameList))
                 .execute();
