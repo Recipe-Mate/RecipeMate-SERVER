@@ -40,7 +40,8 @@ public class FoodRepository {
 
     public void deleteFood(long userId, List<String> foodNameList) {
         new JPADeleteClause(em, food)
-                .where(food.foodName.in(foodNameList))
+                .where(food.foodName.in(foodNameList)
+                        .and(food.userId.eq(userId)))
                 .execute();
     }
 
