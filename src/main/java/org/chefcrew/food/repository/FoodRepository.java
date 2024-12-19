@@ -19,7 +19,7 @@ public class FoodRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public void saveFoodList(List<Food> foodList) {
+    public void saveFood(Food foodList) {
         em.persist(foodList);
     }
 
@@ -30,9 +30,28 @@ public class FoodRepository {
                 .fetch();
     }
 
-    public void deleteFood(List<String> foodNameList){
+    public boolean existsByUserId(long userId){
+        Integer count = query.selectOne()
+                .from(food)
+                .where(food.userId.eq(userId))
+                .fetchFirst();
+        return count != null && count > 0;
+    }
+
+    public void deleteFood(long userId, List<String> foodNameList) {
         new JPADeleteClause(em, food)
-                .where(food.foodName.in(foodNameList))
+                .where(food.foodName.in(foodNameList)
+                        .and(food.userId.eq(userId)))
                 .execute();
+    }
+
+    public boolean existsByFoodNameAndUserId(String foodName, long userId) {
+        Integer count = query.selectOne()
+                .from(food)
+                .where(food.foodName.eq(foodName)
+                        .and(food.userId.eq(userId)))
+                .fetchFirst();
+        return count != null && count > 0;
+
     }
 }

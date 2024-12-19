@@ -1,13 +1,17 @@
 package org.chefcrew.food.service;
 
+import static org.chefcrew.common.exception.ErrorException.USER_NOT_FOUND;
+
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.food.dto.request.AddFoodRequest;
 import org.chefcrew.food.dto.request.DeleteFoodRequest;
 import org.chefcrew.food.entity.Food;
 import org.chefcrew.food.repository.FoodRepository;
+import org.chefcrew.user.service.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,15 +19,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FoodService {
     public final FoodRepository foodRepository;
+    public final UserService userService;
 
-    public void saveFoodList(AddFoodRequest foodAddRequest) {
+    @Transactional
+    public void saveFoodList(long userId, AddFoodRequest foodAddRequest) {
+        validateUser(userId);
         List<Food> foodDataList = foodAddRequest.foodNameList().stream()
-                .map(name -> new Food(name, foodAddRequest.userId()))
+                .filter(name -> !foodRepository.existsByFoodNameAndUserId(name, userId))
+                .map(name -> new Food(name, userId))
                 .toList();
-        foodRepository.saveFoodList(foodDataList);
+        if (foodDataList != null) {
+            foodDataList.forEach(foodRepository::saveFood);
+        }
+    }
+
+    private void validateUser(long userId) {
+        if (userService.getUserInfo(userId) == null) {
+            throw new CustomException(USER_NOT_FOUND);
+        }
     }
 
     public List<String> getOwnedFoodList(long userId) {
+        validateUser(userId);
+        if (!foodRepository.existsByUserId(userId)) {
+            return null;
+        }
         List<Food> foodList = foodRepository.findByUserId(userId);
         if (foodList != null) {
             return foodList.stream().map(food -> food.getFoodName())
@@ -33,7 +53,7 @@ public class FoodService {
         }
     }
 
-    public void deleteFood(DeleteFoodRequest deleteFoodRequest) {
-        foodRepository.deleteFood(deleteFoodRequest.foodNameList());
+    public void deleteFood(long userId, DeleteFoodRequest deleteFoodRequest) {
+        foodRepository.deleteFood(userId, deleteFoodRequest.foodNameList());
     }
 }

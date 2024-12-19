@@ -1,10 +1,13 @@
 package org.chefcrew.recipe.service;
 
+import static org.chefcrew.common.exception.ErrorException.OPEN_API_SERVER_ERROR;
+
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.recipe.domain.Recipe;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse;
@@ -13,7 +16,6 @@ import org.chefcrew.recipe.dto.response.GetRecipeResponse;
 import org.chefcrew.recipe.enums.ValueOption;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -55,6 +57,8 @@ public class RecipeService {
         Boolean finalNatriumHigh = natriumHigh;
         Boolean finalProtienHigh = protienHigh;
         Boolean finalCarbohydrateHigh = carbohydrateHigh;
+        if(getRecipeOpenResponse.cookRcpInfo().row() == null)
+            throw new CustomException(OPEN_API_SERVER_ERROR);
         List<RecipeData> recipeResponseList = getRecipeOpenResponse.cookRcpInfo().row()
                 .stream()
                 .filter(recipeData -> (isAppriateRecipe(finalCalorieHigh, finalFatHigh, finalNatriumHigh,
@@ -64,7 +68,9 @@ public class RecipeService {
 
         List<Recipe> recipeList = recipeResponseList.stream()
                 .map(recipeData -> new Recipe(recipeData.recipeName(),
-                        Arrays.stream(recipeData.partsDetails().split(",")).toList(),
+                        Arrays.stream(recipeData.partsDetails().split("\n|, |,"))
+                                .map(food -> food.contains(":")? food.split(": ")[1]: food)
+                                .toList(),
                         recipeData.getManuals(),
                         recipeData.getManualImages(),
                         recipeData.infoCal(),
@@ -79,19 +85,19 @@ public class RecipeService {
 
     private boolean isAppriateRecipe(Boolean finalCalorieHigh, Boolean finalFatHigh, Boolean finalNatriumHigh,
                                      Boolean finalProtienHigh, Boolean finalCarbohydrateHigh, RecipeData recipeData) {
-        return (finalCalorieHigh != null || finalCalorieHigh == isCalorieHigh(recipeData.infoCal()))
-                && (finalFatHigh != null || finalFatHigh == isFatHigh(recipeData.infoFat()))
-                && (finalNatriumHigh != null || finalNatriumHigh == isNatriumHigh(recipeData.infoFat()))
-                && (finalProtienHigh != null || finalProtienHigh == isProtienHigh(recipeData.infoFat()))
-                && (finalCarbohydrateHigh != null || finalCarbohydrateHigh == isCarbohydrateHigh(recipeData.infoFat()));
+        return (finalCalorieHigh == null || finalCalorieHigh == isCalorieHigh(recipeData.infoCal()))
+                && (finalFatHigh == null || finalFatHigh == isFatHigh(recipeData.infoFat()))
+                && (finalNatriumHigh == null || finalNatriumHigh == isNatriumHigh(recipeData.infoNa()))
+                && (finalProtienHigh == null || finalProtienHigh == isProtienHigh(recipeData.infoPro()))
+                && (finalCarbohydrateHigh == null || finalCarbohydrateHigh == isCarbohydrateHigh(recipeData.infoCar()));
     }
 
     private boolean isCalorieHigh(float calorie) {
         return calorie > 700;
     }
 
-    private boolean isFatHigh(float calorie) {
-        return calorie > 700;
+    private boolean isFatHigh(float fat) {
+        return fat > 10;
     }
 
     private boolean isNatriumHigh(float natrium) {
@@ -99,11 +105,11 @@ public class RecipeService {
     }
 
     private boolean isProtienHigh(float protien) {
-        return protien > 20;
+        return protien > 10;
     }
 
     private boolean isCarbohydrateHigh(float carbohydrate) {
-        return carbohydrate > 60;
+        return carbohydrate > 100;
     }
 
     //공공데이터 서버에 재료 사용한 메뉴 정보 조회

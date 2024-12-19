@@ -24,7 +24,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserInfo(userId));
     }
 
-    @PostMapping("/post")
+    @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest requestBody) {
         userService.addUser(requestBody);
         return ResponseEntity.ok().build();
