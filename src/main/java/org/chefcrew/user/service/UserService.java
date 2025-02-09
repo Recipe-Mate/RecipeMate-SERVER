@@ -43,12 +43,16 @@ public class UserService {
 
     public LoginResponse login(SignUpRequest signUpRequest) {
         User userInfo = userRepository.findByEmail(signUpRequest.email());
+        System.out.println(signUpRequest);
         if (userInfo == null) {
+            System.out.println("이메일 틀림");
             throw new CustomException(USER_NOT_FOUND);
         }
         if (userInfo.getPassword().equals(signUpRequest.password())) {
+            System.out.println("로그인 성공");
             return new LoginResponse(userInfo.getUserId());
         } else {
+            System.out.println("비번 틀림");
             throw new CustomException(PASSWORD_NOT_ACCORD);
         }
     }

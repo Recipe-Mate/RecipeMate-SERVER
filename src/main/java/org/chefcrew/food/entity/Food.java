@@ -1,9 +1,6 @@
 package org.chefcrew.food.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public class Food {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long foodId;
 
@@ -22,8 +20,8 @@ public class Food {
 
     private long userId;
 
-    public Food(String foodName, long userId){
-        this.foodName = foodName;
+    public Food(String name, long userId) {
+        this.foodName = name;
         this.userId = userId;
     }
 }
