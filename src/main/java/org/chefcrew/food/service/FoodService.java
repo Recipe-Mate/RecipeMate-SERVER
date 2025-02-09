@@ -22,11 +22,11 @@ public class FoodService {
     public final UserService userService;
 
     @Transactional
-    public void saveFoodList(AddFoodRequest foodAddRequest) {
-        validateUser(foodAddRequest.userId());
+    public void saveFoodList(long userId, AddFoodRequest foodAddRequest) {
+        validateUser(userId);
         List<Food> foodDataList = foodAddRequest.foodNameList().stream()
-                .filter(name -> !foodRepository.existsByFoodNameAndUserId(name, foodAddRequest.userId()))
-                .map(name -> new Food(name, foodAddRequest.userId()))
+                .filter(name -> !foodRepository.existsByFoodNameAndUserId(name, userId))
+                .map(name -> new Food(name, userId))
                 .toList();
         if (foodDataList != null) {
             foodDataList.forEach(foodRepository::saveFood);
@@ -53,7 +53,7 @@ public class FoodService {
         }
     }
 
-    public void deleteFood(DeleteFoodRequest deleteFoodRequest) {
-        foodRepository.deleteFood(deleteFoodRequest.userId(), deleteFoodRequest.foodNameList());
+    public void deleteFood(long userId, DeleteFoodRequest deleteFoodRequest) {
+        foodRepository.deleteFood(userId, deleteFoodRequest.foodNameList());
     }
 }
