@@ -64,7 +64,7 @@ public class RecipeService {
         Boolean finalNatriumHigh = natriumHigh;
         Boolean finalProtienHigh = protienHigh;
         Boolean finalCarbohydrateHigh = carbohydrateHigh;
-        if(getRecipeOpenResponse.cookRcpInfo().row() == null)
+        if (getRecipeOpenResponse.cookRcpInfo().row() == null)
             throw new CustomException(OPEN_API_SERVER_ERROR);
         List<RecipeData> recipeResponseList = getRecipeOpenResponse.cookRcpInfo().row()
                 .stream()
@@ -76,7 +76,7 @@ public class RecipeService {
         List<Recipe> recipeList = recipeResponseList.stream()
                 .map(recipeData -> new Recipe(recipeData.recipeName(),
                         Arrays.stream(recipeData.partsDetails().split("\n|, |,"))
-                                .map(food -> food.contains(":")? food.split(": ")[1]: food)
+                                .map(food -> food.contains(":") ? food.split(": ")[1] : food)
                                 .toList(),
                         recipeData.getManuals(),
                         recipeData.getManualImages(),
@@ -125,10 +125,10 @@ public class RecipeService {
         //서버랑 통신
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println(apiURL+ingredient);
+        System.out.println(apiURL + ingredient);
         final HttpEntity<String> entity = new HttpEntity<>(null);
 
-        return restTemplate.exchange(apiURL+ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
+        return restTemplate.exchange(apiURL + ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
                 .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
 
 
