@@ -28,6 +28,13 @@ public class RecipeService {
     @Value("${apiKey}")
     private String apiKey;
 
+    String apiURL = "http://openapi.foodsafetykorea.go.kr/api/"
+            + apiKey
+            + "/COOKRCP01"
+            + "/json"
+            + "/1/15"
+            +"/RCP_PARTS_DTLS=";
+
     public GetRecipeResponse getRecommendRecipe(GetRecipeRequest getRecipeRequest) {
 
         Boolean calorieHigh = null;
@@ -37,7 +44,7 @@ public class RecipeService {
         Boolean carbohydrateHigh = null;
 
         //공공데이터에 메뉴 조회
-        GetRecipeOpenResponse getRecipeOpenResponse = getMenuDataFromApi(getRecipeRequest.foodName());
+        GetRecipeOpenResponse getRecipeOpenResponse = getMenuDataFromApiByName(getRecipeRequest.foodName());
         //메뉴 필터링
         calorieHigh = getRecipeRequest.calorie() == ValueOption.NONE ? null
                 : (getRecipeRequest.calorie() == ValueOption.HIGH ? true : false);        //700kcal 이상
@@ -114,21 +121,14 @@ public class RecipeService {
 
     //공공데이터 서버에 재료 사용한 메뉴 정보 조회
     //open api 통신 과정
-    public GetRecipeOpenResponse getMenuDataFromApi(String ingredient) {
+    public GetRecipeOpenResponse getMenuDataFromApiByName(String ingredient) {
         //서버랑 통신
         RestTemplate restTemplate = new RestTemplate();
 
-        String apiURL = "http://openapi.foodsafetykorea.go.kr/api/"
-                + apiKey
-                + "/COOKRCP01"
-                + "/json"
-                + "/1/15"
-                +"/RCP_PARTS_DTLS="
-                +ingredient;
-        System.out.println(apiURL);
+        System.out.println(apiURL+ingredient);
         final HttpEntity<String> entity = new HttpEntity<>(null);
 
-        return restTemplate.exchange(apiURL, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
+        return restTemplate.exchange(apiURL+ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
                 .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
 
 
