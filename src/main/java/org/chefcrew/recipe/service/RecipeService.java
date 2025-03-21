@@ -1,13 +1,9 @@
 package org.chefcrew.recipe.service;
 
-import static org.chefcrew.common.exception.ErrorException.OPEN_API_SERVER_ERROR;
-
 import jakarta.transaction.Transactional;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.chefcrew.common.exception.CustomException;
+import org.chefcrew.common.validate.Validation;
 import org.chefcrew.recipe.domain.Recipe;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse;
@@ -19,6 +15,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.chefcrew.common.exception.ErrorException.OPEN_API_SERVER_ERROR;
 
 @Service
 @Transactional
@@ -32,8 +34,7 @@ public class RecipeService {
             + apiKey
             + "/COOKRCP01"
             + "/json"
-            + "/1/15"
-            +"/RCP_PARTS_DTLS=";
+            + "/1/15/";
 
     public GetRecipeResponse getRecommendRecipe(GetRecipeRequest getRecipeRequest) {
 
@@ -44,7 +45,7 @@ public class RecipeService {
         Boolean carbohydrateHigh = null;
 
         //공공데이터에 메뉴 조회
-        GetRecipeOpenResponse getRecipeOpenResponse = getMenuDataFromApiByName(getRecipeRequest.foodName());
+        GetRecipeOpenResponse getRecipeOpenResponse = getMenuDataFromApiByIngredientName(getRecipeRequest.foodName());
         //메뉴 필터링
         calorieHigh = getRecipeRequest.calorie() == ValueOption.NONE ? null
                 : (getRecipeRequest.calorie() == ValueOption.HIGH ? true : false);        //700kcal 이상
@@ -121,7 +122,37 @@ public class RecipeService {
 
     //공공데이터 서버에 재료 사용한 메뉴 정보 조회
     //open api 통신 과정
-    public GetRecipeOpenResponse getMenuDataFromApiByName(String ingredient) {
+    public GetRecipeOpenResponse getMenuDataFromApiByIngredientName(String ingredient) {
+        //서버랑 통신
+        RestTemplate restTemplate = new RestTemplate();
+
+        System.out.println(apiURL + "RCP_PARTS_DTLS=" + ingredient);
+        final HttpEntity<String> entity = new HttpEntity<>(null);
+
+        return restTemplate.exchange(apiURL + ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
+                .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
+
+
+    }
+
+    //공공데이터 서버에 레시피명으로 메뉴 정보 조회
+    //open api 통신 과정
+    public GetRecipeOpenResponse getMenuDataFromApiByRecipeName(String recipeName) {
+        //서버랑 통신
+        RestTemplate restTemplate = new RestTemplate();
+
+        System.out.println(apiURL + "RCP_NM=" + recipeName);
+        final HttpEntity<String> entity = new HttpEntity<>(null);
+
+        return restTemplate.exchange(apiURL + recipeName, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
+                .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
+
+
+    }
+
+    //공공데이터 서버에 아이디로 조회
+    //open api 통신 과정
+    public GetRecipeOpenResponse getMenuDataFromApiById(String ingredient) {
         //서버랑 통신
         RestTemplate restTemplate = new RestTemplate();
 
