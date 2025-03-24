@@ -2,10 +2,11 @@ package org.chefcrew.recipe.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.chefcrew.common.validate.Validation;
 import org.chefcrew.recipe.entity.SavedRecipeInfo;
 import org.chefcrew.recipe.repository.SavedRecipeInfoRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -27,5 +28,11 @@ public class SavedRecipeInfoService {
         savedRecipeInfoRepository.saveRecipe(savedRecipeInfo);
     }
 
+    //조회하는 메서드
+    public List<SavedRecipeInfo> getRecipeInfoList(List<Long> recipesIdList) {
+        return recipesIdList.stream()
+                .map(tagId -> savedRecipeInfoRepository.findByRecipeId(tagId))
+                .toList();
+    }
 
 }
