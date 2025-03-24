@@ -32,4 +32,10 @@ public class SavedRecipeInfoRepository {
                 .where(savedRecipeInfo.recipeName.eq(recipeName))
                 .fetchFirst();
     }
+
+    public SavedRecipeInfo findByRecipeId(long recipeId) {
+        return query.selectFrom(savedRecipeInfo)
+                .where(savedRecipeInfo.recipeId.eq(recipeId))
+                .fetchFirst();
+    }
 }
