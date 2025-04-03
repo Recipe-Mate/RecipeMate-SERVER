@@ -8,11 +8,23 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorException {
 
+    /**
+     * 400 BAD REQUEST EXCEPTION
+     */
     REQUEST_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "잘못된 요청입니다."),
     RECIPE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "잘못된 레시피 정보입니다."),
     ALREADY_EXIST_EMAIL(HttpStatus.BAD_REQUEST.value(), "이미 가입된 이메일입니다"),
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "유저가 존재하지 않습니다."),
     PASSWORD_NOT_ACCORD(HttpStatus.BAD_REQUEST.value(), "비밀번호가 불일치합니다."),
+
+    /**
+     * 401 UNAUTHORIZED EXCEPTION
+     */
+    TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "토큰이 유효하지 않습니다."),
+
+    /**
+     * 503 SERVICE UNAVAILABLE
+     */
     OPEN_API_SERVER_ERROR(HttpStatus.SERVICE_UNAVAILABLE.value(), "공공데이터 서버가 작동하지 않습니다.");
     int status;
     String errorMessage;
