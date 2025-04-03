@@ -31,7 +31,7 @@ public class SavedRecipeInfoService {
     //조회하는 메서드
     public List<SavedRecipeInfo> getRecipeInfoList(List<Long> recipesIdList) {
         return recipesIdList.stream()
-                .map(tagId -> savedRecipeInfoRepository.findByRecipeId(tagId))
+                .map(recipeId -> savedRecipeInfoRepository.findByRecipeId(recipeId))
                 .toList();
     }
 
