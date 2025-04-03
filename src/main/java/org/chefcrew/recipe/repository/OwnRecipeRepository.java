@@ -1,11 +1,12 @@
 package org.chefcrew.recipe.repository;
 
+import static org.chefcrew.recipe.entity.QOwnRecipe.ownRecipe;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import org.chefcrew.recipe.entity.OwnRecipe;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class OwnRecipeRepository {
@@ -22,9 +23,10 @@ public class OwnRecipeRepository {
     }
 
     public List<OwnRecipe> findByUserId(long userId) {
-        return query.selectFrom(savedRecipeInfo)
-                .where(savedRecipeInfo.userId.eq(userId))
-                .fetchAll();
+        return query.selectFrom(ownRecipe)
+                .where(ownRecipe.userId.eq(userId))
+                .fetchAll()
+                .stream().toList();
     }
 
 }

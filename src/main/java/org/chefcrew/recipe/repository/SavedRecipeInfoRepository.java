@@ -1,5 +1,7 @@
 package org.chefcrew.recipe.repository;
 
+import static org.chefcrew.recipe.entity.QSavedRecipeInfo.savedRecipeInfo;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.chefcrew.recipe.entity.SavedRecipeInfo;
@@ -35,7 +37,7 @@ public class SavedRecipeInfoRepository {
 
     public SavedRecipeInfo findByRecipeId(long recipeId) {
         return query.selectFrom(savedRecipeInfo)
-                .where(savedRecipeInfo.recipeId.eq(recipeId))
+                .where(savedRecipeInfo.id.eq(recipeId))
                 .fetchFirst();
     }
 }
