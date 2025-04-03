@@ -2,7 +2,9 @@ package org.chefcrew.common.validate;
 
 import org.chefcrew.recipe.service.RecipeService;
 import org.chefcrew.user.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Validation {
     private UserRepository userRepository;
     private RecipeService recipeService;
