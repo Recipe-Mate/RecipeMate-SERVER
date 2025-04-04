@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import org.chefcrew.food.entity.Food;
+import org.chefcrew.user.entity.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -53,5 +54,18 @@ public class FoodRepository {
                 .fetchFirst();
         return count != null && count > 0;
 
+    }
+
+    public List<Food> getAllByUser(User user){
+        return query.selectFrom(food)
+                .where(food.userId.eq(user.getUserId()))
+                .fetch();
+    }
+
+    public void deleteAllById(List<Long> foodIdList){
+        new JPADeleteClause(em, food)
+                .where(food.foodId.in(foodIdList))
+                .execute();
+        em.flush();
     }
 }

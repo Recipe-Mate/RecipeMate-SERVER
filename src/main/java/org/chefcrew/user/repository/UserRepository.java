@@ -4,6 +4,7 @@ import static org.chefcrew.user.entity.QUser.user;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.util.Optional;
 import org.chefcrew.user.entity.User;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +17,8 @@ public class UserRepository {
         this.em = em;
         this.query = new JPAQueryFactory(em);
     }
-    public void addUser(User user) {
+
+    public void save(User user) {
         em.persist(user);
     }
 
@@ -38,5 +40,37 @@ public class UserRepository {
         return query.selectFrom(user)
                 .where(user.email.eq(email))
                 .fetchFirst();
+    }
+
+    public Optional<User> findByRefreshToken(String refreshToken) {
+        return Optional.ofNullable(query.selectFrom(user)
+                .where(user.refreshToken.eq(refreshToken))
+                .fetchFirst());
+    }
+
+    public Optional<User> findBySocialId(String socialId) {
+        return Optional.ofNullable(query.selectFrom(user)
+                .where(user.socialId.eq(socialId))
+                .fetchFirst());
+    }
+
+    public boolean existsBySocialId(String socialId) {
+        Integer count = query.selectOne()
+                .from(user)
+                .where(user.socialId.eq(socialId))
+                .fetchFirst();
+        return count != null && count > 0;
+    }
+
+    public Optional<User> findByUserId(Long userId) {
+        return Optional.ofNullable(query.selectFrom(user)
+                .where(user.userId.eq(userId))
+                .fetchFirst());
+    }
+
+    public Long deleteByUserId(Long userId) {
+        return query.delete(user)
+                .where(user.userId.eq(userId))
+                .execute();
     }
 }
