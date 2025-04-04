@@ -23,6 +23,11 @@ public enum ErrorException {
     TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "토큰이 유효하지 않습니다."),
 
     /**
+     * 422 UNPROCESSABLE_ENTITY
+     */
+    UNPROCESSABLE_KAKAO_SERVER_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY.value(), "카카오서버와 통신 과정에서 오류가 발생했습니다."),
+    UNPROCESSABLE_ENTITY_DELETE_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY.value(), "db에서 삭제 과정에서 오류가 발생했습니다."),
+    /**
      * 503 SERVICE UNAVAILABLE
      */
     OPEN_API_SERVER_ERROR(HttpStatus.SERVICE_UNAVAILABLE.value(), "공공데이터 서버가 작동하지 않습니다.");
