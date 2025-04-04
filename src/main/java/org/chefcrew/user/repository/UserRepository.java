@@ -28,7 +28,7 @@ public class UserRepository {
                 .fetchFirst();
     }
 
-    public boolean existByEmail(String email) {
+/*    public boolean existByEmail(String email) {
         Long count = query.select(user.count())
                 .from(user)
                 .where(user.email.eq(email))
@@ -40,7 +40,7 @@ public class UserRepository {
         return query.selectFrom(user)
                 .where(user.email.eq(email))
                 .fetchFirst();
-    }
+    }*/
 
     public Optional<User> findByRefreshToken(String refreshToken) {
         return Optional.ofNullable(query.selectFrom(user)

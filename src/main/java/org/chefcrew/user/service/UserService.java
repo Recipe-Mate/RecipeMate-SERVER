@@ -1,15 +1,11 @@
 package org.chefcrew.user.service;
 
-import static org.chefcrew.common.exception.ErrorException.ALREADY_EXIST_EMAIL;
-import static org.chefcrew.common.exception.ErrorException.PASSWORD_NOT_ACCORD;
 import static org.chefcrew.common.exception.ErrorException.USER_NOT_FOUND;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.chefcrew.common.exception.CustomException;
-import org.chefcrew.user.dto.request.SignUpRequest;
 import org.chefcrew.user.dto.response.GetUserInfoResponse;
-import org.chefcrew.user.dto.response.LoginResponse;
 import org.chefcrew.user.entity.User;
 import org.chefcrew.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -28,6 +24,7 @@ public class UserService {
         return new GetUserInfoResponse(user.getNickname(), user.getProfile());
     }
 
+/*
     @Transactional
     public void addUser(SignUpRequest signUpRequest) {
         if (isDuplicateEmail(signUpRequest.email())) {
@@ -36,6 +33,7 @@ public class UserService {
         User user = new User(signUpRequest.email(), signUpRequest.password(), signUpRequest.userName());
         userRepository.addUser(user);
     }
+
 
     public boolean isDuplicateEmail(String email) {
         return userRepository.existByEmail(email);
@@ -56,4 +54,6 @@ public class UserService {
             throw new CustomException(PASSWORD_NOT_ACCORD);
         }
     }
+*/
+
 }
