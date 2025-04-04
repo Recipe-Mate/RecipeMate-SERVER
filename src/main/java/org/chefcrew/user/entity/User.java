@@ -6,29 +6,50 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Entity
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private Long userId;
 
-    private String userName;
+    @Column(nullable = false)
+    private String nickname;
 
-    private String email;
+    @Column(nullable = false)
+    private String socialId;
 
-    @Column(name = "pw")
-    private String password;
+    @Column(nullable = true)
+    private String refreshToken;
 
-    public User(String email, String password, String userName){
-        this.email = email;
-        this.password = password;
-        this.userName = userName;
+    @Column(nullable = true)
+    private String profile;
+
+    @Builder
+    public User(String nickname, String socialId, String refreshToken, String profile) {
+        this.nickname = nickname;
+        this.socialId = socialId;
+        this.refreshToken = refreshToken;
+        this.profile = profile;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateProfile(String profile) {
+        this.profile = profile;
     }
 }
