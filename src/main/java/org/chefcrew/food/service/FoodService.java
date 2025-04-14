@@ -26,12 +26,15 @@ public class FoodService {
     @Transactional
     public void saveFoodList(long userId, AddFoodRequest foodAddRequest) {
         validateUser(userId);
-        List<Food> foodDataList = foodAddRequest.foodNameList().stream()
-                .filter(name -> !foodRepository.existsByFoodNameAndUserId(name, userId))
-                .map(name -> new Food(name, userId))
+
+        //신규 등장한 음식 데이터 저장
+        List<Food> foodList = foodAddRequest.foodList().stream()
+                .map(food -> new Food(food.getFoodName(), food.getAmount(), food.getUnit(), null,
+                        userId)) //TODO 이미지 관련 작업 진행 예정
                 .toList();
-        if (foodDataList != null) {
-            foodDataList.forEach(foodRepository::saveFood);
+
+        if (foodList != null) {
+            foodList.forEach(foodRepository::saveFood);
         }
     }
 
