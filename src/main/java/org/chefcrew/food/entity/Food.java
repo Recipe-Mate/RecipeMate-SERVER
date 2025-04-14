@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.chefcrew.common.enums.AmountUnit;
 
 @Entity
 @Slf4j
@@ -18,10 +19,16 @@ public class Food {
 
     private String foodName;
 
+    private float foodAmount;
+
+    private AmountUnit amountUnit;
+
     private long userId;
 
-    public Food(String name, long userId) {
+    public Food(String name, float foodAmount, AmountUnit amountUnit, long userId) {
         this.foodName = name;
+        this.foodAmount = foodAmount;
+        this.amountUnit = amountUnit;
         this.userId = userId;
     }
 }
