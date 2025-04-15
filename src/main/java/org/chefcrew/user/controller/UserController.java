@@ -17,7 +17,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<GetUserInfoResponse> getUserInfo(
-            @UserId long userId
+            @UserId Long userId
     ) {
         return ResponseEntity.ok().body(userService.getUserInfo(userId));
     }

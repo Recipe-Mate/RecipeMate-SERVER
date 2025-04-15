@@ -33,27 +33,35 @@ public class AuthController {
 
     @PostMapping("/token")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TokenResponse> reissueToken(@RequestHeader String refreshToken) {
+    public ResponseEntity<TokenResponse> reissueToken(
+            @RequestHeader String refreshToken
+    ) {
         return ResponseEntity.ok(authService.issueToken(refreshToken));
     }
 
     @PostMapping("/sign-out")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity signOut(@UserId Long userId) {
+    public ResponseEntity signOut(
+            @UserId Long userId
+    ) {
         authService.signOut(userId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/withdraw")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity withdraw(@UserId Long userId) {
+    public ResponseEntity withdraw(
+            @UserId Long userId
+    ) {
         authService.withdraw(userId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/token/health")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TokenHealthDto> checkHealthOfToken(@RequestHeader String token) {
+    public ResponseEntity<TokenHealthDto> checkHealthOfToken(
+            @RequestHeader String token
+    ) {
         return ResponseEntity.ok(authService.checkHealthOfToken(token));
     }
 }

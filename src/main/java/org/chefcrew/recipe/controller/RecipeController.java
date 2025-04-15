@@ -31,7 +31,7 @@ public class RecipeController {
 
     @PostMapping("/used")
     public ResponseEntity<Void> postAsUsedRecipe(
-            @UserId long userId,
+            @UserId Long userId,
             @RequestBody PostUsedRecipeRequest requestBody) {
         recipeFacade.postAsUsedRecipe(userId, requestBody);
         return ResponseEntity.ok().build();
@@ -39,7 +39,7 @@ public class RecipeController {
 
     @GetMapping("/used")
     public ResponseEntity<GetUsedRecipeListResponse> getUsedRecipeList(
-            @UserId long userId
+            @UserId Long userId
     ) {
         return ResponseEntity.ok(recipeFacade.getUsedRecipeList(userId));
     }
