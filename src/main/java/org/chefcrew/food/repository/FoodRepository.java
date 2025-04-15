@@ -2,10 +2,12 @@ package org.chefcrew.food.repository;
 
 import static org.chefcrew.food.entity.QFood.food;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import org.chefcrew.food.domain.FoodAmount;
 import org.chefcrew.food.entity.Food;
 import org.chefcrew.user.entity.User;
 import org.springframework.stereotype.Repository;
@@ -39,9 +41,9 @@ public class FoodRepository {
         return count != null && count > 0;
     }
 
-    public void deleteFood(long userId, List<String> foodNameList) {
+    public void deleteFood(long userId, List<Long> foodIdList) {
         new JPADeleteClause(em, food)
-                .where(food.foodName.in(foodNameList)
+                .where(food.foodId.in(foodIdList)
                         .and(food.userId.eq(userId)))
                 .execute();
     }
@@ -67,5 +69,21 @@ public class FoodRepository {
                 .where(food.foodId.in(foodIdList))
                 .execute();
         em.flush();
+    }
+
+    public List<Food> getByUserIdAndFoodId(long userId, List<FoodAmount> foodAmountList) {
+        BooleanBuilder builder = new BooleanBuilder();
+        for (FoodAmount foodAmount : foodAmountList) {
+            builder.or(
+                    food.foodId.eq(foodAmount.getFoodId())
+                            .and(food.userId.eq(userId))
+            );
+        }
+
+        List<Food> result = query
+                .selectFrom(food)
+                .where(builder)
+                .fetch();
+        return result;
     }
 }
