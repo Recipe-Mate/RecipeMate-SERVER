@@ -41,9 +41,9 @@ public class FoodRepository {
         return count != null && count > 0;
     }
 
-    public void deleteFood(long userId, List<String> foodNameList) {
+    public void deleteFood(long userId, List<Long> foodIdList) {
         new JPADeleteClause(em, food)
-                .where(food.foodName.in(foodNameList)
+                .where(food.foodId.in(foodIdList)
                         .and(food.userId.eq(userId)))
                 .execute();
     }

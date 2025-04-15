@@ -67,7 +67,7 @@ public class FoodService {
     }
 
     public void deleteFood(long userId, DeleteFoodRequest deleteFoodRequest) {
-        foodRepository.deleteFood(userId, deleteFoodRequest.foodNameList());
+        foodRepository.deleteFood(userId, deleteFoodRequest.foodIdList());
     }
 
     public void deleteAllByUser(User user) throws IOException {
