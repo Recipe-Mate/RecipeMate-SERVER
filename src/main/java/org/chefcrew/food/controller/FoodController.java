@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.chefcrew.config.UserId;
 import org.chefcrew.food.dto.request.AddFoodRequest;
 import org.chefcrew.food.dto.request.DeleteFoodRequest;
+import org.chefcrew.food.dto.request.PostAmountUpdateRequest;
 import org.chefcrew.food.dto.response.GetOwnFoodResponse;
 import org.chefcrew.food.service.FoodService;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,16 @@ public class FoodController {
     ) {
         return ResponseEntity.ok()
                 .body(new GetOwnFoodResponse(foodService.getOwnedFoodList(userId)));
+    }
+
+    //먹은 양 체크하는 api
+    @PostMapping("/amount-update")
+    private ResponseEntity<Void> updateFoodAmount(
+            @UserId long userId,
+            @RequestBody PostAmountUpdateRequest requestBody
+    ){
+        foodService.updateFoodAmount(userId, requestBody);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
