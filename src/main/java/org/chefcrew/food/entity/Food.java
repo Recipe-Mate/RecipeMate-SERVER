@@ -33,4 +33,8 @@ public class Food {
         this.imgUrl = imgUrl;
         this.userId = userId;
     }
+
+    public void updateAmount(float amount){
+        this.foodAmount = amount;
+    }
 }
