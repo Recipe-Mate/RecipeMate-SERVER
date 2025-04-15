@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.chefcrew.common.exception.CustomException;
+import org.chefcrew.food.dto.FoodResponseData;
 import org.chefcrew.food.dto.request.AddFoodRequest;
 import org.chefcrew.food.dto.request.DeleteFoodRequest;
 import org.chefcrew.food.entity.Food;
@@ -44,14 +45,16 @@ public class FoodService {
         }
     }
 
-    public List<String> getOwnedFoodList(long userId) {
+    public List<FoodResponseData> getOwnedFoodList(long userId) {
         validateUser(userId);
         if (!foodRepository.existsByUserId(userId)) {
             return null;
         }
         List<Food> foodList = foodRepository.findByUserId(userId);
         if (foodList != null) {
-            return foodList.stream().map(food -> food.getFoodName())
+            return foodList.stream()
+                    .map(food -> new FoodResponseData(food.getFoodId(), food.getFoodName(), food.getFoodAmount(),
+                            food.getAmountUnit(), food.getImgUrl()))
                     .collect(Collectors.toList());
         } else {
             return null;
