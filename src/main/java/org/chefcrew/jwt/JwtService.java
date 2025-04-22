@@ -86,8 +86,8 @@ public class JwtService {
     }
 
     // JWT 토큰 내용 확인
-    public String getJwtContents(String token) {
+    public String getUserFromJwt(String token) {
         final Claims claims = getBody(token);
-        return (String) claims.get("userId");
+        return (String) claims.get(JWTConstants.USER_ID);
     }
 }
