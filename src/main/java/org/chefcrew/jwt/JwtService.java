@@ -1,23 +1,21 @@
 package org.chefcrew.jwt;
 
 
-import static io.jsonwebtoken.Jwts.builder;
-import static io.jsonwebtoken.Jwts.claims;
-import static io.jsonwebtoken.Jwts.parserBuilder;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Header;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.chefcrew.common.constants.JWTConstants;
+import org.chefcrew.common.exception.CustomException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
-import javax.crypto.SecretKey;
-import org.chefcrew.common.exception.CustomException;
-import org.chefcrew.common.exception.ErrorException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+
+import static io.jsonwebtoken.Jwts.*;
+import static org.chefcrew.common.exception.ErrorException.*;
 
 @Service
 public class JwtService {
@@ -57,15 +55,25 @@ public class JwtService {
     }
 
     // JWT 토큰 검증
-    public boolean verifyToken(String token) {
+    public JwtValidationType verifyToken(String token) {
         try {
             final Claims claims = getBody(token);
-            return true;
-        } catch (RuntimeException e) {
-            if (e instanceof ExpiredJwtException) {
-                throw new CustomException(ErrorException.TOKEN_TIME_EXPIRED_EXCEPTION);
+            if (claims.get(JWTConstants.TOKEN_TYPE).toString().equals(JWTConstants.ACCESS_TOKEN)) {
+                return JwtValidationType.VALID_ACCESS;
+            } else if (claims.get(JWTConstants.TOKEN_TYPE).toString().equals(JWTConstants.REFRESH_TOKEN)) {
+                return JwtValidationType.VALID_REFRESH;
             }
-            throw new CustomException(ErrorException.USER_NOT_FOUND);
+            throw new CustomException(WRONG_TYPE_TOKEN_EXCEPTION);
+        } catch (MalformedJwtException e) {
+            throw new CustomException(WRONG_TYPE_TOKEN_EXCEPTION);
+        } catch (ExpiredJwtException e) {
+            throw new CustomException(TIME_EXPIRED_TOKEN_EXCEPTION);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(UNKNOWN_TOKEN_EXCEPTION);
+        } catch (UnsupportedJwtException e) {
+            throw new CustomException(UNSUPPORTED_TOKEN_EXCEPTION);
+        } catch (SignatureException e) {
+            throw new CustomException(WRONG_SIGNATURE_TOKEN_EXCEPTION);
         }
     }
 

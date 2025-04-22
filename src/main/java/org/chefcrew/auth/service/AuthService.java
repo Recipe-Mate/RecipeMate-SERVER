@@ -11,6 +11,7 @@ import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.common.exception.ErrorException;
 import org.chefcrew.jwt.JwtService;
 import org.chefcrew.food.service.FoodService;
+import org.chefcrew.jwt.JwtValidationType;
 import org.chefcrew.recipe.service.OwnRecipeService;
 import org.chefcrew.user.entity.User;
 import org.chefcrew.user.repository.UserRepository;
@@ -126,7 +127,9 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public TokenHealthDto checkHealthOfToken(String refreshToken) {
-        return TokenHealthDto.of(jwtService.verifyToken(refreshToken));
+        return TokenHealthDto.of(
+                jwtService.verifyToken(refreshToken) == JwtValidationType.VALID_REFRESH
+        );
     }
 
 }

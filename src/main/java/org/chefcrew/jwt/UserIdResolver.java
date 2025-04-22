@@ -28,7 +28,8 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
         final String token = request.getHeader("accessToken");
 
         // 토큰 검증
-        if (!jwtService.verifyToken(token)) {
+        if (jwtService.verifyToken(token) == JwtValidationType.VALID_ACCESS
+                || jwtService.verifyToken(token) == JwtValidationType.VALID_REFRESH) {
             throw new RuntimeException(
                     String.format("USER_ID를 가져오지 못했습니다. (%s - %s)", parameter.getClass(), parameter.getMethod()));
         }
