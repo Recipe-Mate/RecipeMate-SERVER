@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import lombok.RequiredArgsConstructor;
+import org.chefcrew.common.constants.HTTPConstants;
 import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.common.exception.ErrorException;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,15 +53,15 @@ public class KakaoSignInService {
     public String getAccessToken(String code, String domainName) {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add(HTTPConstants.CONTENT_TYPE, HTTPConstants.CONTENT_TYPE_FORM_URLENCODED);
 
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         String redirectUri = selectRedirectUri(domainName);
-        body.add("grant_type", "authorization_code");
-        body.add("client_id", KAKAO_CLIENT_ID);
-        body.add("redirect_uri", redirectUri);
-        body.add("code", code);
+        body.add(HTTPConstants.GRANT_TYPE, HTTPConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+        body.add(HTTPConstants.CLIENT_ID, KAKAO_CLIENT_ID);
+        body.add(HTTPConstants.REDIRECT_URI, redirectUri);
+        body.add(HTTPConstants.CODE, code);
 
         // HTTP 요청 보내기
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
@@ -81,26 +82,26 @@ public class KakaoSignInService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return jsonNode.get("access_token").asText(); //토큰 전송
+        return jsonNode.get(HTTPConstants.ACCESS_TOKEN).asText(); //토큰 전송
     }
 
     public LoginResult getKaKaoUserData(String accessToken) {
         ResponseEntity<Object> responseData = requestKakaoServer(accessToken, Strategy.LOGIN);
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap profileResponse = (HashMap) objectMapper.convertValue(responseData.getBody(), Map.class)
-                .get("properties");
+                .get(HTTPConstants.RESPONSE_PROPERTIES);
         return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(),
-                profileResponse == null || profileResponse.get("profile_image") == null ? null
-                        : profileResponse.get("profile_image").toString(),
-                profileResponse == null || profileResponse.get("nickname") == null ? null
-                        : profileResponse.get("nickname").toString()); //프로필 이미지 허용 x시 null값으로 넘김
+                profileResponse == null || profileResponse.get(HTTPConstants.RESPONSE_PROFILE_IMAGE) == null ? null
+                        : profileResponse.get(HTTPConstants.RESPONSE_PROFILE_IMAGE).toString(),
+                profileResponse == null || profileResponse.get(HTTPConstants.RESPONSE_NICKNAME) == null ? null
+                        : profileResponse.get(HTTPConstants.RESPONSE_NICKNAME).toString()); //프로필 이미지 허용 x시 null값으로 넘김
     }
 
     public String withdrawKakao(String socialId) {
         ResponseEntity<Object> responseData = requestKakaoServer(socialId, Strategy.WITHDRAWAL);
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap profileResponse = (HashMap) objectMapper.convertValue(responseData.getBody(), Map.class);
-        return profileResponse.get("id").toString();
+        return profileResponse.get(HTTPConstants.RESPONSE_ID).toString();
     }
 
     private ResponseEntity<Object> requestKakaoServer(String idOrAccessToken, Strategy strategy) {
@@ -109,17 +110,17 @@ public class KakaoSignInService {
 
         switch (strategy) {
             case WITHDRAWAL -> {
-                headers.add("Authorization", "KakaoAK " + KAKAO_AK);
+                headers.add(HTTPConstants.HEADER_AUTHORIZATION, HTTPConstants.HEADER_AUTHORIZATION_KAKAO + KAKAO_AK);
 
                 MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-                param.set("target_id_type", "user_id");
-                param.set("target_id", idOrAccessToken);
+                param.set(HTTPConstants.PARAM_TARGET_ID_TYPE, HTTPConstants.PARAM_USER_ID);
+                param.set(HTTPConstants.PARAM_TARGET_ID, idOrAccessToken);
                 HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param, headers);
 
                 return restTemplate.postForEntity(KAKAO_WITHDRAW, httpEntity, Object.class);
             }
             case LOGIN -> {
-                headers.add("Authorization", "Bearer " + idOrAccessToken);
+                headers.add(HTTPConstants.HEADER_AUTHORIZATION, HTTPConstants.HEADER_BEARER + idOrAccessToken);
 
                 HttpEntity<JsonArray> httpEntity = new HttpEntity<>(headers);
                 return restTemplate.postForEntity(KAKAO_URL, httpEntity, Object.class);
