@@ -1,9 +1,10 @@
 package org.chefcrew.food.dto.request;
 
+import org.chefcrew.food.dto.NewFoodData;
+
 import java.util.List;
-import org.chefcrew.food.dto.FoodData;
 
 public record AddFoodRequest(
-        List<FoodData> foodList
+        List<NewFoodData> foodList
 ) {
 }
