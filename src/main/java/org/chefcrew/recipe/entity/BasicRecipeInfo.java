@@ -22,5 +22,5 @@ public class BasicRecipeInfo{
         long recipeId;
         String recipeName;
         String recipeSumry;
-        NationOption nationOption;
+        //NationOption nationOption;
 }

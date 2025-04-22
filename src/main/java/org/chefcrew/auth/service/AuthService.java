@@ -1,6 +1,5 @@
 package org.chefcrew.auth.service;
 
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.chefcrew.auth.dto.response.SignInResponse;
@@ -18,6 +17,8 @@ import org.chefcrew.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 @Slf4j
 @Service
@@ -39,8 +40,8 @@ public class AuthService {
     private String BASIC_THUMBNAIL;
 
     @Transactional
-    public SignInResponse signIn(String socialAccessToken) throws IOException {
-        LoginResult loginResult = login(socialAccessToken);
+    public SignInResponse signIn(String code, String domainName) throws IOException {
+        LoginResult loginResult = login(code, domainName);
         String socialId = loginResult.id();
         String profileImage = loginResult.profile();
         String nickname = loginResult.nickname();
@@ -96,7 +97,8 @@ public class AuthService {
         user.updateRefreshToken(null);
     }
 
-    private LoginResult login(String socialAccessToken) {
+    private LoginResult login(String code, String domainName) {
+        String socialAccessToken = kakaoSignInService.getAccessToken(code, domainName);
         return kakaoSignInService.getKaKaoUserData(socialAccessToken);
     }
 

@@ -21,6 +21,7 @@ public class Food {
 
     private float foodAmount;
 
+    @Enumerated(EnumType.STRING)
     private AmountUnit amountUnit;
 
     private long userId;

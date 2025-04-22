@@ -23,7 +23,7 @@ public class FoodController {
 
     @PostMapping
     public ResponseEntity<Void> saveNewFoodList(
-            @UserId long userId,
+            @UserId Long userId,
             @RequestBody AddFoodRequest requestBody
     ) {
         foodService.saveFoodList(userId, requestBody);
@@ -32,7 +32,7 @@ public class FoodController {
 
     @GetMapping("/ownlist")
     private ResponseEntity<GetOwnFoodResponse> getOwnFoodList(
-            @UserId long userId
+            @UserId Long userId
     ) {
         return ResponseEntity.ok()
                 .body(new GetOwnFoodResponse(foodService.getOwnedFoodList(userId)));
@@ -41,7 +41,7 @@ public class FoodController {
     //먹은 양 체크하는 api
     @PostMapping("/amount-update")
     private ResponseEntity<Void> updateFoodAmount(
-            @UserId long userId,
+            @UserId Long userId,
             @RequestBody PostAmountUpdateRequest requestBody
     ){
         foodService.updateFoodAmount(userId, requestBody);
@@ -50,7 +50,7 @@ public class FoodController {
 
     @DeleteMapping
     private ResponseEntity<Void> deleteUsedFood(
-            @UserId long userId,
+            @UserId Long userId,
             @RequestBody DeleteFoodRequest requestBody) {
         foodService.deleteFood(userId, requestBody);
         return ResponseEntity.ok().build();
