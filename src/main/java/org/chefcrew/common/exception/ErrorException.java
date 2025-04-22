@@ -20,8 +20,11 @@ public enum ErrorException {
     /**
      * 401 UNAUTHORIZED EXCEPTION
      */
-    TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "토큰이 유효하지 않습니다."),
-
+    TIME_EXPIRED_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "만료된 토큰입니다."),
+    WRONG_TYPE_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "인증토큰이 존재하지 않습니다."),
+    UNKNOWN_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "토큰 형식이 유효하지 않습니다."),
+    UNSUPPORTED_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "지원하지 않는 토큰 방식입니다."),
+    WRONG_SIGNATURE_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "Signature가 잘못된 토큰입니다."),
     /**
      * 422 UNPROCESSABLE_ENTITY
      */
