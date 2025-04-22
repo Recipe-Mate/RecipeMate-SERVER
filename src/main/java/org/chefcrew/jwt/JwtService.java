@@ -1,4 +1,4 @@
-package org.chefcrew.config.jwt;
+package org.chefcrew.jwt;
 
 
 import static io.jsonwebtoken.Jwts.builder;

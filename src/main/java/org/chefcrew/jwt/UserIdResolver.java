@@ -1,9 +1,8 @@
-package org.chefcrew.config;
+package org.chefcrew.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.chefcrew.config.jwt.JwtService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

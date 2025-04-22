@@ -1,7 +1,7 @@
 package org.chefcrew.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.chefcrew.config.UserId;
+import org.chefcrew.jwt.UserId;
 import org.chefcrew.user.dto.response.GetUserInfoResponse;
 import org.chefcrew.user.service.UserService;
 import org.springframework.http.ResponseEntity;

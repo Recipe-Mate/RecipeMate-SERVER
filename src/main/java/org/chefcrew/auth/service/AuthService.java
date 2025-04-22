@@ -9,7 +9,7 @@ import org.chefcrew.auth.service.kakao.KakaoSignInService;
 import org.chefcrew.auth.service.kakao.LoginResult;
 import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.common.exception.ErrorException;
-import org.chefcrew.config.jwt.JwtService;
+import org.chefcrew.jwt.JwtService;
 import org.chefcrew.food.service.FoodService;
 import org.chefcrew.recipe.service.OwnRecipeService;
 import org.chefcrew.user.entity.User;

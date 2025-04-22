@@ -8,7 +8,7 @@ import org.chefcrew.auth.dto.response.SignInResponse;
 import org.chefcrew.auth.dto.response.TokenHealthDto;
 import org.chefcrew.auth.dto.response.TokenResponse;
 import org.chefcrew.auth.service.AuthService;
-import org.chefcrew.config.UserId;
+import org.chefcrew.jwt.UserId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
