@@ -9,8 +9,9 @@ import org.chefcrew.auth.service.kakao.KakaoSignInService;
 import org.chefcrew.auth.service.kakao.LoginResult;
 import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.common.exception.ErrorException;
-import org.chefcrew.config.jwt.JwtService;
+import org.chefcrew.jwt.JwtService;
 import org.chefcrew.food.service.FoodService;
+import org.chefcrew.jwt.JwtValidationType;
 import org.chefcrew.recipe.service.OwnRecipeService;
 import org.chefcrew.user.entity.User;
 import org.chefcrew.user.repository.UserRepository;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+
+import static org.chefcrew.common.constants.JWTConstants.ACCESS_TOKEN;
+import static org.chefcrew.common.constants.JWTConstants.REFRESH_TOKEN;
 
 @Slf4j
 @Service
@@ -60,8 +64,8 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(ErrorException.USER_NOT_FOUND));
 
         // 자체 jwt 발급 (서버 내 액세스 토큰/리프레시 토큰)
-        String accessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS);
-        String refreshToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_REFRESH);
+        String accessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS, ACCESS_TOKEN);
+        String refreshToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_REFRESH, REFRESH_TOKEN);
 
         user.updateRefreshToken(refreshToken);
         user.updateProfile(BASIC_ROOT + BASIC_THUMBNAIL);
@@ -81,9 +85,9 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(ErrorException.USER_NOT_FOUND));
 
         // 자체 jwt 발급 (서버 내 액세스 토큰/리프레시 토큰)
-        String newAccessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS);
+        String newAccessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS, ACCESS_TOKEN);
         String newRefreshToken = jwtService.issuedToken(String.valueOf(user.getUserId()),
-                TOKEN_EXPIRATION_TIME_REFRESH);
+                TOKEN_EXPIRATION_TIME_REFRESH, REFRESH_TOKEN);
 
         user.updateRefreshToken(newRefreshToken);
 
@@ -126,7 +130,9 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public TokenHealthDto checkHealthOfToken(String refreshToken) {
-        return TokenHealthDto.of(jwtService.verifyToken(refreshToken));
+        return TokenHealthDto.of(
+                jwtService.verifyToken(refreshToken) == JwtValidationType.VALID_REFRESH
+        );
     }
 
 }

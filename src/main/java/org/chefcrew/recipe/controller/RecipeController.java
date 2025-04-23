@@ -1,7 +1,7 @@
 package org.chefcrew.recipe.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.chefcrew.config.UserId;
+import org.chefcrew.jwt.UserId;
 import org.chefcrew.recipe.Facade.RecipeFacade;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
 import org.chefcrew.recipe.dto.request.PostUsedRecipeRequest;

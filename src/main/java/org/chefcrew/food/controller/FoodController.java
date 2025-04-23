@@ -1,7 +1,7 @@
 package org.chefcrew.food.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.chefcrew.config.UserId;
+import org.chefcrew.jwt.UserId;
 import org.chefcrew.food.dto.request.AddFoodRequest;
 import org.chefcrew.food.dto.request.DeleteFoodRequest;
 import org.chefcrew.food.dto.request.PostAmountUpdateRequest;
