@@ -66,8 +66,9 @@ public class JwtService {
                 return JwtValidationType.VALID_ACCESS;
             } else if (claims.get(JWTConstants.TOKEN_TYPE).toString().equals(JWTConstants.REFRESH_TOKEN)) {
                 return JwtValidationType.VALID_REFRESH;
+            } else {
+                throw new CustomException(WRONG_TYPE_TOKEN_EXCEPTION);
             }
-            throw new CustomException(WRONG_TYPE_TOKEN_EXCEPTION);
         } catch (MalformedJwtException e) {
             throw new CustomException(WRONG_TYPE_TOKEN_EXCEPTION);
         } catch (ExpiredJwtException e) {
@@ -92,6 +93,10 @@ public class JwtService {
     // JWT 토큰 내용 확인
     public String getUserFromJwt(String token) {
         final Claims claims = getBody(token);
-        return (String) claims.get(JWTConstants.USER_ID);
+        Object userIdObj = claims.get(JWTConstants.USER_ID);
+        if (userIdObj == null) {
+            throw new CustomException(UNKNOWN_TOKEN_EXCEPTION);
+        }
+        return userIdObj.toString();
     }
 }
