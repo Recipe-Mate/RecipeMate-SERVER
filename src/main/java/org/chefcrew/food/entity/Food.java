@@ -13,7 +13,7 @@ import org.chefcrew.common.enums.AmountUnit;
 @Getter
 public class Food {
     @Id
-    @Column(name = "id")
+    @Column(name = "food_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long foodId;
 
@@ -35,7 +35,8 @@ public class Food {
         this.userId = userId;
     }
 
-    public void updateAmount(float amount){
+    public void updateAmountAndUnit(float amount, AmountUnit amountUnit) {
         this.foodAmount = amount;
+        this.amountUnit = amountUnit;
     }
 }
