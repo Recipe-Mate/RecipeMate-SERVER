@@ -8,7 +8,7 @@ public record GetRecipeOpenResponse(
         @JsonProperty("COOKRCP01") CookRcpInfo cookRcpInfo
 ) {
     public record CookRcpInfo(
-            String total_count,
+            Long total_count,
             List<RecipeData> row,
             Result result
     ) {

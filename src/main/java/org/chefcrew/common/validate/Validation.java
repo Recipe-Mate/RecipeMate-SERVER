@@ -6,14 +6,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Validation {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private RecipeService recipeService;
+
+    public Validation(UserRepository userRepository, RecipeService recipeService) {
+        this.userRepository = userRepository;
+        this.recipeService = recipeService;
+    }
 
     //openapi에서 레시피명으로 조회
     public Boolean isExistRecipeByRecipeName(String recipeName) {
         if (recipeService.getMenuDataFromApiByRecipeName(recipeName) != null)
-            return false;
-        else return true;
+            return true;
+        return false;
     }
 
     public boolean isExistUserByUserId(long userId) {

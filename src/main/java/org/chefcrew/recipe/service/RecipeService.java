@@ -154,30 +154,32 @@ public class RecipeService {
                         entity,
                         GetRecipeOpenResponse.class)
                 .getBody();
-        System.out.println(response);
-        return response;/*
-        log.error(getApiUrl() + "RCP_NM=" + recipeName);
-        log.error("널값임");*/
+
+        if (response.cookRcpInfo().total_count() == 0) {
+            return null;
+        }
+        return response;
     }
 
     ; //여기서 바로 통신한 결과 리턴하는 형식
 
 
 
-    //공공데이터 서버에 아이디로 조회
+/*
+   //공공데이터 서버에 아이디로 조회
     //open api 통신 과정
     public GetRecipeOpenResponse getMenuDataFromApiById(String ingredient) {
         //서버랑 통신
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println(apiURL + ingredient);
+        System.out.println(getApiUrl() + ingredient);
         final HttpEntity<String> entity = new HttpEntity<>(null);
 
-        return restTemplate.exchange(apiURL + ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
+        return restTemplate.exchange(getApiUrl() + ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
                 .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
 
 
-    }
+    }*/
 }
 
 
