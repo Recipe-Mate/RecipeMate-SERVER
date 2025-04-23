@@ -10,4 +10,8 @@ public class CustomException extends RuntimeException {
         super(String.valueOf(errorException.errorMessage));
         this.errorException = errorException;
     }
+
+    public ErrorException getErrorException() {
+        return errorException;
+    }
 }
