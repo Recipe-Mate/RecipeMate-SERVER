@@ -30,7 +30,7 @@ public class JwtService {
     }
 
     // JWT 토큰 발급
-    public String issuedToken(String userId, Long tokenExpirationTime) {
+    public String issuedToken(String userId, Long tokenExpirationTime, String tokenType) {
         final Date now = new Date();
 
         // 클레임 생성
@@ -40,8 +40,12 @@ public class JwtService {
                 .setExpiration(new Date(now.getTime() + tokenExpirationTime));
 
         //private claim 등록
-        claims.put("userId", userId);
-
+        claims.put(JWTConstants.USER_ID, userId);
+        if (tokenType == JWTConstants.ACCESS_TOKEN) {
+            claims.put(JWTConstants.TOKEN_TYPE, JWTConstants.ACCESS_TOKEN);
+        } else if (tokenType == JWTConstants.REFRESH_TOKEN) {
+            claims.put(JWTConstants.TOKEN_TYPE, JWTConstants.REFRESH_TOKEN);
+        }
         return builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)

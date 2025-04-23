@@ -21,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
+import static org.chefcrew.common.constants.JWTConstants.ACCESS_TOKEN;
+import static org.chefcrew.common.constants.JWTConstants.REFRESH_TOKEN;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -61,8 +64,8 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(ErrorException.USER_NOT_FOUND));
 
         // 자체 jwt 발급 (서버 내 액세스 토큰/리프레시 토큰)
-        String accessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS);
-        String refreshToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_REFRESH);
+        String accessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS, ACCESS_TOKEN);
+        String refreshToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_REFRESH, REFRESH_TOKEN);
 
         user.updateRefreshToken(refreshToken);
         user.updateProfile(BASIC_ROOT + BASIC_THUMBNAIL);
@@ -82,9 +85,9 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(ErrorException.USER_NOT_FOUND));
 
         // 자체 jwt 발급 (서버 내 액세스 토큰/리프레시 토큰)
-        String newAccessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS);
+        String newAccessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS, ACCESS_TOKEN);
         String newRefreshToken = jwtService.issuedToken(String.valueOf(user.getUserId()),
-                TOKEN_EXPIRATION_TIME_REFRESH);
+                TOKEN_EXPIRATION_TIME_REFRESH, REFRESH_TOKEN);
 
         user.updateRefreshToken(newRefreshToken);
 
