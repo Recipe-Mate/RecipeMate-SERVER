@@ -9,13 +9,11 @@ import org.chefcrew.common.constants.HTTPConstants;
 import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.common.exception.ErrorException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -51,38 +49,50 @@ public class KakaoSignInService {
     }
 
     public String getAccessToken(String code, String domainName) {
-        // HTTP Header 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HTTPConstants.CONTENT_TYPE, HTTPConstants.CONTENT_TYPE_FORM_URLENCODED);
-
-        // HTTP Body 생성
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        String redirectUri = selectRedirectUri(domainName);
-        body.add(HTTPConstants.GRANT_TYPE, HTTPConstants.GRANT_TYPE_AUTHORIZATION_CODE);
-        body.add(HTTPConstants.CLIENT_ID, KAKAO_CLIENT_ID);
-        body.add(HTTPConstants.REDIRECT_URI, redirectUri);
-        body.add(HTTPConstants.CODE, code);
-
-        // HTTP 요청 보내기
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-
-        // HTTP 응답 (JSON) -> 액세스 토큰 파싱
-        String responseBody = response.getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = null;
         try {
-            jsonNode = objectMapper.readTree(responseBody);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            // HTTP Header 생성
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HTTPConstants.CONTENT_TYPE, HTTPConstants.CONTENT_TYPE_FORM_URLENCODED);
+
+            // HTTP Body 생성
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            String redirectUri = selectRedirectUri(domainName);
+            body.add(HTTPConstants.GRANT_TYPE, HTTPConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+            body.add(HTTPConstants.CLIENT_ID, KAKAO_CLIENT_ID);
+            body.add(HTTPConstants.REDIRECT_URI, redirectUri);
+            body.add(HTTPConstants.CODE, code);
+
+            // HTTP 요청 보내기
+            HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(
+                    "https://kauth.kakao.com/oauth/token",
+                    HttpMethod.POST,
+                    kakaoTokenRequest,
+                    String.class
+            );
+
+            // HTTP 응답 (JSON) -> 액세스 토큰 파싱
+            String responseBody = response.getBody();
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = null;
+            try {
+                jsonNode = objectMapper.readTree(responseBody);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            return jsonNode.get(HTTPConstants.ACCESS_TOKEN).asText(); //토큰 전송
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                // 카카오 서버에서 발생한 400 오류 처리
+                throw new CustomException(ErrorException.WRONG_TYPE_TOKEN_EXCEPTION);
+            } else if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                throw new CustomException(ErrorException.TIME_EXPIRED_TOKEN_EXCEPTION);
+            } else {
+                throw new CustomException(ErrorException.UNEXPECTED_TOKEN_EXCEPTION);
+            }
         }
-        return jsonNode.get(HTTPConstants.ACCESS_TOKEN).asText(); //토큰 전송
+
     }
 
     public LoginResult getKaKaoUserData(String accessToken) {
