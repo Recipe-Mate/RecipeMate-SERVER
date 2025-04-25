@@ -10,9 +10,11 @@ public class WhiteListConstants {
             "/auth/token/health",
             "/oauth/kakao/**",
             "/api/kakao/login",
-            "/swagger-ui/",
-            "/swagger-resources/",
-            "/api-docs/"
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/webjars/**"
     );
 
     public static final String[] SECURITY_WHITE_LIST = {
@@ -22,7 +24,9 @@ public class WhiteListConstants {
             "/oauth/kakao/**",
             "/swagger-ui/**",
             "/swagger-resources/**",
-            "/api-docs/**"
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/webjars/**"
     };
 
 }
