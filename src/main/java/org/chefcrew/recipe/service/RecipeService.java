@@ -7,7 +7,7 @@ import org.chefcrew.recipe.domain.Recipe;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse.RecipeData;
-import org.chefcrew.recipe.dto.response.GetRecipeResponse;
+import org.chefcrew.recipe.dto.response.GetRecipeListResponse;
 import org.chefcrew.recipe.enums.ValueOption;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -37,7 +37,7 @@ public class RecipeService {
                 + "/1/15/";
     }
 
-    public GetRecipeResponse getRecommendRecipe(GetRecipeRequest getRecipeRequest) {
+    public GetRecipeListResponse getRecommendRecipe(GetRecipeRequest getRecipeRequest) {
 
         Boolean calorieHigh = null;
         Boolean natriumHigh = null;
