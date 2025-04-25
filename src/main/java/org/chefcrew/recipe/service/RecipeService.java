@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.recipe.domain.Recipe;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
+import org.chefcrew.recipe.dto.response.GetRecipeListResponse;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse.RecipeData;
-import org.chefcrew.recipe.dto.response.GetRecipeResponse;
 import org.chefcrew.recipe.enums.ValueOption;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,10 +15,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
 import static org.chefcrew.common.exception.ErrorException.OPEN_API_SERVER_ERROR;
 
 @Service
@@ -37,7 +37,7 @@ public class RecipeService {
                 + "/1/15/";
     }
 
-    public GetRecipeResponse getRecommendRecipe(GetRecipeRequest getRecipeRequest) {
+    public GetRecipeListResponse getRecommendRecipe(GetRecipeRequest getRecipeRequest) {
 
         Boolean calorieHigh = null;
         Boolean natriumHigh = null;
@@ -78,7 +78,7 @@ public class RecipeService {
         List<Recipe> recipeList = recipeResponseList.stream()
                 .map(recipeData -> new Recipe(recipeData.recipeName(),
                         recipeData.dish_Img(),
-                        Arrays.stream(recipeData.partsDetails().split("\n|, |,"))
+                        stream(recipeData.partsDetails().split("\n|, |,"))
                                 .map(food -> food.contains(":") ? food.split(": ")[1] : food)
                                 .toList(),
                         recipeData.getManuals(),
@@ -90,7 +90,7 @@ public class RecipeService {
                         recipeData.infoCar()))
                 .collect(Collectors.toList());
 
-        return new GetRecipeResponse(recipeList);
+        return new GetRecipeListResponse(recipeList);
     }
 
     private boolean isAppriateRecipe(Boolean finalCalorieHigh, Boolean finalFatHigh, Boolean finalNatriumHigh,
@@ -159,6 +159,23 @@ public class RecipeService {
             return null;
         }
         return response;
+    }
+
+    public Recipe fetchRecipeData(GetRecipeOpenResponse getRecipeOpenResponse) {
+        RecipeData recipeData = getRecipeOpenResponse.cookRcpInfo().row().get(0);
+        Recipe recipe = new Recipe(recipeData.recipeName(),
+                recipeData.dish_Img(),
+                stream(recipeData.partsDetails().split("\n|, |,"))
+                        .map(food -> food.contains(":") ? food.split(": ")[1] : food)
+                        .toList(),
+                recipeData.getManuals(),
+                recipeData.getManualImages(),
+                recipeData.infoCal(),
+                recipeData.infoNa(),
+                recipeData.infoFat(),
+                recipeData.infoPro(),
+                recipeData.infoCar());
+        return recipe;
     }
 
     ; //여기서 바로 통신한 결과 리턴하는 형식

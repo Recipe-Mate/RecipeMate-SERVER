@@ -1,20 +1,26 @@
 package org.chefcrew.recipe.Facade;
 
-import static org.chefcrew.common.exception.ErrorException.RECIPE_NOT_FOUND;
-
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.chefcrew.common.exception.CustomException;
 import org.chefcrew.common.validate.Validation;
 import org.chefcrew.recipe.dto.request.PostUsedRecipeRequest;
+import org.chefcrew.recipe.dto.response.GetRecipeDataResponse;
+import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse;
 import org.chefcrew.recipe.dto.response.GetUsedRecipeListResponse;
 import org.chefcrew.recipe.entity.OwnRecipe;
 import org.chefcrew.recipe.entity.SavedRecipeInfo;
 import org.chefcrew.recipe.service.OwnRecipeService;
+import org.chefcrew.recipe.service.RecipeService;
 import org.chefcrew.recipe.service.SavedRecipeInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static org.chefcrew.common.exception.ErrorException.RECIPE_NOT_FOUND;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,6 +29,7 @@ public class RecipeFacade {
     private final OwnRecipeService ownRecipeService;
 
     private final Validation validation;
+    private final RecipeService recipeService;
 
     //사용한 레시피 추가
     public void postAsUsedRecipe(long userId, PostUsedRecipeRequest postUsedRecipeRequest) {
@@ -55,4 +62,12 @@ public class RecipeFacade {
         return new GetUsedRecipeListResponse(savedRecipeInfoList);
     }
 
+    public GetRecipeDataResponse getRecipeDataByRecipeName(String recipeName) {
+        if (validation.isExistRecipeByRecipeName(recipeName)) {
+            GetRecipeOpenResponse openApiResponse = recipeService.getMenuDataFromApiByRecipeName(recipeName);
+            return new GetRecipeDataResponse(recipeService.fetchRecipeData(openApiResponse));
+        } else {
+            throw new CustomException(RECIPE_NOT_FOUND);
+        }
+    }
 }
