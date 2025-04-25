@@ -3,7 +3,6 @@ package org.chefcrew.recipe.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.chefcrew.common.exception.CustomException;
-import org.chefcrew.common.validate.Validation;
 import org.chefcrew.recipe.domain.Recipe;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
 import org.chefcrew.recipe.dto.response.GetRecipeOpenResponse;
@@ -30,11 +29,13 @@ public class RecipeService {
     @Value("${apiKey}")
     private String apiKey;
 
-    String apiURL = "http://openapi.foodsafetykorea.go.kr/api/"
-            + apiKey
-            + "/COOKRCP01"
-            + "/json"
-            + "/1/15/";
+    public String getApiUrl() {
+        return "http://openapi.foodsafetykorea.go.kr/api/"
+                + apiKey
+                + "/COOKRCP01"
+                + "/json"
+                + "/1/15/";
+    }
 
     public GetRecipeResponse getRecommendRecipe(GetRecipeRequest getRecipeRequest) {
 
@@ -76,6 +77,7 @@ public class RecipeService {
 
         List<Recipe> recipeList = recipeResponseList.stream()
                 .map(recipeData -> new Recipe(recipeData.recipeName(),
+                        recipeData.dish_Img(),
                         Arrays.stream(recipeData.partsDetails().split("\n|, |,"))
                                 .map(food -> food.contains(":") ? food.split(": ")[1] : food)
                                 .toList(),
@@ -126,10 +128,13 @@ public class RecipeService {
         //서버랑 통신
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println(apiURL + "RCP_PARTS_DTLS=" + ingredient);
+        System.out.println(getApiUrl() + "RCP_PARTS_DTLS=" + ingredient);
         final HttpEntity<String> entity = new HttpEntity<>(null);
 
-        return restTemplate.exchange(apiURL + ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
+        return restTemplate.exchange(getApiUrl() + "RCP_PARTS_DTLS=" + ingredient,
+                        HttpMethod.GET,
+                        entity,
+                        GetRecipeOpenResponse.class)
                 .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
 
 
@@ -141,29 +146,40 @@ public class RecipeService {
         //서버랑 통신
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println(apiURL + "RCP_NM=" + recipeName);
+        System.out.println(getApiUrl() + "RCP_NM=" + recipeName);
         final HttpEntity<String> entity = new HttpEntity<>(null);
 
-        return restTemplate.exchange(apiURL + recipeName, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
-                .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
+        GetRecipeOpenResponse response = restTemplate.exchange(getApiUrl() + "RCP_NM=" + recipeName,
+                        HttpMethod.GET,
+                        entity,
+                        GetRecipeOpenResponse.class)
+                .getBody();
 
-
+        if (response.cookRcpInfo().total_count() == 0) {
+            return null;
+        }
+        return response;
     }
 
-    //공공데이터 서버에 아이디로 조회
+    ; //여기서 바로 통신한 결과 리턴하는 형식
+
+
+
+/*
+   //공공데이터 서버에 아이디로 조회
     //open api 통신 과정
     public GetRecipeOpenResponse getMenuDataFromApiById(String ingredient) {
         //서버랑 통신
         RestTemplate restTemplate = new RestTemplate();
 
-        System.out.println(apiURL + ingredient);
+        System.out.println(getApiUrl() + ingredient);
         final HttpEntity<String> entity = new HttpEntity<>(null);
 
-        return restTemplate.exchange(apiURL + ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
+        return restTemplate.exchange(getApiUrl() + ingredient, HttpMethod.GET, entity, GetRecipeOpenResponse.class)
                 .getBody(); //여기서 바로 통신한 결과 리턴하는 형식
 
 
-    }
+    }*/
 }
 
 

@@ -26,7 +26,7 @@ public class OwnRecipeRepository {
     public List<OwnRecipe> findAllByUserId(long userId) {
         return query.selectFrom(ownRecipe)
                 .where(ownRecipe.userId.eq(userId))
-                .fetchAll()
+                .fetch()
                 .stream().toList();
     }
 

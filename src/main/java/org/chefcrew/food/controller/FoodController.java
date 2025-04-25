@@ -44,7 +44,7 @@ public class FoodController {
             @UserId Long userId,
             @RequestBody PostAmountUpdateRequest requestBody
     ){
-        foodService.updateFoodAmount(userId, requestBody);
+        foodService.updateFoodAmountAndUnit(userId, requestBody);
         return ResponseEntity.ok().build();
     }
 

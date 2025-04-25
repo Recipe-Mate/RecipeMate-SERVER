@@ -76,7 +76,8 @@ public class FoodService {
                 (Food::getFoodId)).collect(Collectors.toList()));
     }
 
-    public void updateFoodAmount(long userId, PostAmountUpdateRequest postAmountUpdateRequest){
+    @Transactional
+    public void updateFoodAmountAndUnit(long userId, PostAmountUpdateRequest postAmountUpdateRequest){
         List<FoodData> foodDataList = postAmountUpdateRequest.foodDataList();
         List<FoodAmount> foodAmountList = getFoodAmountList(foodDataList);
         List<Food> originDataList = foodRepository.getByUserIdAndFoodId(userId, foodAmountList);
@@ -88,13 +89,13 @@ public class FoodService {
             Food food = foodMap.get(requestData.getFoodId());
 
             if (food != null) {
-                food.updateAmount(requestData.getAmount());
+                food.updateAmountAndUnit(requestData.getAmount(), requestData.getAmountUnit());
             }
         }
     }
 
     public List<FoodAmount> getFoodAmountList(List<FoodData> foodDataList){
-        return foodDataList.stream().map(foodData -> new FoodAmount(foodData.getFoodId(), foodData.getAmount()))
+        return foodDataList.stream().map(foodData -> new FoodAmount(foodData.getFoodId(), foodData.getAmount(), foodData.getUnit()))
                 .collect(Collectors.toList());
     }
 }
