@@ -9,9 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -113,6 +116,32 @@ public class S3Service {
     private void validateFileSize(MultipartFile image) {
         if (image.getSize() > MAX_FILE_SIZE) {
             throw new CustomException(ErrorException.FILE_SIZE_BAD_REQUEST);
+        }
+    }
+
+    public String getURL(String keyName) {
+        final S3Client s3Client = s3Config.getS3Client();
+        try {
+            GetUrlRequest request = GetUrlRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyName)
+                    .build();
+
+            URL url = s3Client.utilities().getUrl(request);
+            System.out.println("이미지 키 네임: "+keyName +"의 url: "+ url);
+            return url.toString();
+
+        } catch (S3Exception e) {
+            //db에서 저장된 keyname -> url 변환과정에서 문제 발생시
+            throw new CustomException(ErrorException.IMAGE_INTERNAL_SEVER_ERROR);
+        }
+    }
+
+    public String getFoodImageUrl(String keyName) {
+        if(keyName == null) {
+            return null;
+        }else{
+            return getURL(keyName);
         }
     }
 }
