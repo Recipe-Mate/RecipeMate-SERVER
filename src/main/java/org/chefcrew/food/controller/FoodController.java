@@ -16,13 +16,12 @@ import org.chefcrew.food.dto.request.DeleteFoodRequest;
 import org.chefcrew.food.dto.request.PostAmountUpdateRequest;
 import org.chefcrew.food.dto.response.GetOwnFoodResponse;
 import org.chefcrew.food.service.FoodService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Tag(name = "Food Controller", description = "식재료 관련 API (추가, 조회, 업데이트, 삭제)")
 @SecurityRequirement(name = "jwt-cookie")
@@ -38,12 +37,12 @@ public class FoodController {
             @ApiResponse(responseCode = "400", description = "유저가 존재하지 않습니다",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @PostMapping
-    public ResponseEntity<Void> saveNewFoodList(
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)    public ResponseEntity<Void> saveNewFoodList(
             @Parameter(hidden = true) @UserId Long userId,
-            @RequestBody AddFoodRequest requestBody
+            @RequestPart("foodDataList") AddFoodRequest requestBody,
+            @RequestPart(value = "images", required = false) List<MultipartFile> imageList
     ) {
-        foodService.saveFoodList(userId, requestBody);
+        foodService.saveFoodList(userId, requestBody, imageList);
         return ResponseEntity.ok().build();
     }
 
