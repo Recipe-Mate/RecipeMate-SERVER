@@ -48,7 +48,6 @@ public class FoodService {
         }
 
         List<Food> foodList = new ArrayList<>();
-        ;
         NewFoodData requestFood;
         String imageKey = null;
         //신규 등장한 음식 데이터 저장
@@ -85,7 +84,8 @@ public class FoodService {
         if (foodList != null) {
             return foodList.stream()
                     .map(food -> new FoodResponseData(food.getFoodId(), food.getFoodName(), food.getFoodAmount(),
-                            food.getAmountUnit(), food.getImgUrl()))
+                            food.getAmountUnit(), s3Service.getFoodImageUrl(food.getImgUrl()))
+                    )
                     .collect(Collectors.toList());
         } else {
             return null;
