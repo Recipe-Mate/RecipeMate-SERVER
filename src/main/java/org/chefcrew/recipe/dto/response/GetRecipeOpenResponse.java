@@ -8,7 +8,7 @@ public record GetRecipeOpenResponse(
         @JsonProperty("COOKRCP01") CookRcpInfo cookRcpInfo
 ) {
     public record CookRcpInfo(
-            String total_count,
+            Long total_count,
             List<RecipeData> row,
             Result result
     ) {
@@ -64,7 +64,8 @@ public record GetRecipeOpenResponse(
             @JsonProperty("MANUAL_IMG18") String manual_Img18,
             @JsonProperty("MANUAL_IMG19") String manual_Img19,
             @JsonProperty("HASH_TAG") String hashTag,
-            @JsonProperty("RCP_NA_TIP") String recipeTip
+            @JsonProperty("RCP_NA_TIP") String recipeTip,
+            @JsonProperty("ATT_FILE_NO_MAIN") String dish_Img
     ) {
         public List<String> getManuals() {
             List<String> manuals = new ArrayList<>();
