@@ -16,7 +16,11 @@ public enum ErrorException {
     ALREADY_EXIST_EMAIL(HttpStatus.BAD_REQUEST.value(), "이미 가입된 이메일입니다"),
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "유저가 존재하지 않습니다."),
     PASSWORD_NOT_ACCORD(HttpStatus.BAD_REQUEST.value(), "비밀번호가 불일치합니다."),
-
+    INVALID_IMAGE_EXTENSION(HttpStatus.BAD_REQUEST.value(), "지원하지 않는 이미지 확장자입니다."),
+    IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "요청하는 이미지를 찾을 수 없습니다."),
+    FILE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "요청한 파일형식이 옳지 않습니다."),
+    FILE_SIZE_BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "요청한 파일형식이 옳지 않습니다."),
+    FILE_LIST_SIZE_MISMATCH(HttpStatus.BAD_REQUEST.value(), "요청한 음식 데이터 수와 이미지 갯수가 일치하지 않습니다."),
     /**
      * 401 UNAUTHORIZED EXCEPTION
      */
