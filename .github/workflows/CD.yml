@@ -1,4 +1,4 @@
-name: CI
+name: CD
 
 on:
   push:
@@ -22,8 +22,8 @@ jobs:
 
       - name: application.properties 생성
         run: |
-          mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
+          mkdir -p ${GITHUB_WORKSPACE}/${{ env.working-directory }}/src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ${GITHUB_WORKSPACE}/${{ env.working-directory }}/src/main/resources/application.properties
         working-directory: ${{ env.working-directory }}
 
       - name: 빌드
