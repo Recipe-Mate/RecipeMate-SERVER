@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     env:
-      working-directory: $GITHUB_WORKSPACE/RecipeMate-Server
+      working-directory: RecipeMate-SERVER
 
     steps:
       - name: 체크아웃
