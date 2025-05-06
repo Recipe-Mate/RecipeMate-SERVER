@@ -22,8 +22,9 @@ jobs:
 
       - name: application.properties 생성
         run: |
-          cd src/main/resources
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./application.properties
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
+        working-directory: ${{ env.working-directory }}
 
       - name: 빌드
         run: |
@@ -48,7 +49,7 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
   deploy-cd:      
-    needs: deploy-ci
+    needs: build
     runs-on: ubuntu-20.04
 
     steps:
