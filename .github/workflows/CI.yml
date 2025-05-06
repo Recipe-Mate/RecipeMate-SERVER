@@ -22,8 +22,8 @@ jobs:
 
       - name: application.properties 생성
         run: |
-          mkdir -p $GITHUB_WORKSPACE/RecipeMate-Server/src/main/resources  
-          cd $GITHUB_WORKSPACE/RecipeMate-Server/src/main/resources        
+          mkdir -p $GITHUB_WORKSPACE/RecipeMate-SERVER/src/main/resources  
+          cd $GITHUB_WORKSPACE/RecipeMate-SERVER/src/main/resources        
           touch application.properties                   
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
         shell: bash
@@ -31,6 +31,6 @@ jobs:
       - name: 빌드
         run: |
           chmod +x $GITHUB_WORKSPACE/gradlew
-          cd $GITHUB_WORKSPACE/RecipeMate-Server
+          cd $GITHUB_WORKSPACE/RecipeMate-SERVER
           ./gradlew build -x test
         shell: bash
