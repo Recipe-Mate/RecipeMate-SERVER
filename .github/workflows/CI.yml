@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     env:
-      working-directory: RecipeMate-Server
+      working-directory: $GITHUB_WORKSPACE/RecipeMate-Server
 
     steps:
       - name: 체크아웃
@@ -22,15 +22,15 @@ jobs:
 
       - name: application.properties 생성
         run: |
-          mkdir -p $GITHUB_WORKSPACE/src/main/resources  
-          cd $GITHUB_WORKSPACE/src/main/resources        
+          mkdir -p $GITHUB_WORKSPACE/RecipeMate-Server/src/main/resources  
+          cd $GITHUB_WORKSPACE/RecipeMate-Server/src/main/resources        
           touch application.properties                   
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
         shell: bash
 
       - name: 빌드
         run: |
-          chmod +x gradlew
+          chmod +x $GITHUB_WORKSPACE/RecipeMate-Server/gradlew
+          cd $GITHUB_WORKSPACE/RecipeMate-Server
           ./gradlew build -x test
-        working-directory: ${{ env.working-directory }}
         shell: bash
