@@ -10,16 +10,19 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.chefcrew.common.response.ErrorResponse;
+import org.chefcrew.external.gemini.Service.GeminiService;
 import org.chefcrew.jwt.UserId;
 import org.chefcrew.recipe.Facade.RecipeFacade;
 import org.chefcrew.recipe.dto.request.GetRecipeRequest;
 import org.chefcrew.recipe.dto.request.PostUsedRecipeRequest;
 import org.chefcrew.recipe.dto.response.GetRecipeDataResponse;
 import org.chefcrew.recipe.dto.response.GetRecipeListResponse;
+import org.chefcrew.recipe.dto.response.GetReplicableFoodResponse;
 import org.chefcrew.recipe.dto.response.GetUsedRecipeListResponse;
 import org.chefcrew.recipe.service.RecipeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @Tag(name = "Recipe Controller", description = "레시피 추천 및 사용한 레시피 관련 API")
 @SecurityRequirement(name = "jwt-cookie")
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 public class RecipeController {
     private final RecipeFacade recipeFacade;
     private final RecipeService recipeService;
+    private final GeminiService geminiService;
 
     @Operation(summary = "레시피 추천", description = "주어진 식재료 기반으로 레시피를 추천받습니다.")
     @ApiResponses({
@@ -85,5 +89,20 @@ public class RecipeController {
             @Parameter(hidden = true) @UserId Long userId
     ) {
         return ResponseEntity.ok(recipeFacade.getUsedRecipeList(userId));
+    }
+
+    @Operation(summary = "대체 가능한 식재료 조회", description = "특정 레시피의 특정 식재료를 대체할 수 있는 음식을 검색합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/alternative-food")
+    public Mono<ResponseEntity<GetReplicableFoodResponse>> getAlternativeFood(
+            @RequestParam String menu,
+            @RequestParam String replaceFood) {
+        return geminiService.getAlternativeFoodAsync(menu, replaceFood)
+                .map(GetReplicableFoodResponse::new)
+                .map(ResponseEntity::ok);
     }
 }
