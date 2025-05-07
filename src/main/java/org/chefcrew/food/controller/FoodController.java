@@ -10,12 +10,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.chefcrew.common.response.ErrorResponse;
-import org.chefcrew.jwt.UserId;
 import org.chefcrew.food.dto.request.AddFoodRequest;
 import org.chefcrew.food.dto.request.DeleteFoodRequest;
 import org.chefcrew.food.dto.request.PostAmountUpdateRequest;
 import org.chefcrew.food.dto.response.GetOwnFoodResponse;
 import org.chefcrew.food.service.FoodService;
+import org.chefcrew.jwt.UserId;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +37,8 @@ public class FoodController {
             @ApiResponse(responseCode = "400", description = "유저가 존재하지 않습니다",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)    public ResponseEntity<Void> saveNewFoodList(
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> saveNewFoodList(
             @Parameter(hidden = true) @UserId Long userId,
             @RequestPart("foodDataList") AddFoodRequest requestBody,
             @RequestPart(value = "images", required = false) List<MultipartFile> imageList
@@ -71,7 +72,7 @@ public class FoodController {
     private ResponseEntity<Void> updateFoodAmount(
             @Parameter(hidden = true) @UserId Long userId,
             @RequestBody PostAmountUpdateRequest requestBody
-    ){
+    ) {
         foodService.updateFoodAmountAndUnit(userId, requestBody);
         return ResponseEntity.ok().build();
     }
