@@ -11,8 +11,10 @@ public class HTTPConstants {
     public static final String CODE = "code";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String RESPONSE_PROPERTIES = "properties";
+    public static final String RESPONSE_KAKAO_ACCOUNT = "kakao_account";
     public static final String RESPONSE_PROFILE_IMAGE = "profile_image";
     public static final String RESPONSE_NICKNAME = "nickname";
+    public static final String RESPONSE_EMAIL = "email";
     public static final String RESPONSE_ID = "id";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String HEADER_BEARER = "Bearer ";
