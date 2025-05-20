@@ -49,15 +49,21 @@ public class AuthService {
         String socialId = loginResult.id();
         String profileImage = loginResult.profile();
         String nickname = loginResult.nickname();
-        Boolean isRegistered = userRepository.existsBySocialId(socialId);
+        String email = loginResult.email();
 
-        if (!isRegistered) {
+        if (!isAlreadySignedUser(socialId)) {
             User newUser = User.builder()
                     .nickname(nickname == null ? "새 유저" : nickname)
                     .socialId(socialId)
-                    .profile(profileImage).build();
+                    .profile(profileImage)
+                    .email(email)
+                    .build();
             userRepository.save(newUser);
 
+        } else if (isSignedUserButEmailNotSaved(socialId)) {
+            userRepository.findBySocialId(socialId).ifPresent(user -> {
+                user.updateEmail(email);
+            });
         }
 
         User user = userRepository.findBySocialId(socialId)
@@ -73,8 +79,17 @@ public class AuthService {
         if (nickname != null) {
             user.updateNickname(nickname);
         }
-        return SignInResponse.of(user.getUserId(), accessToken, refreshToken, isRegistered,
+        return SignInResponse.of(user.getUserId(), accessToken, refreshToken, isAlreadySignedUser(socialId),
                 user.getProfile());
+    }
+
+    private boolean isAlreadySignedUser(String socialId) {
+        return userRepository.existsBySocialId(socialId);
+    }
+
+    // email 칼럼 추가로 인한 기존 db 보존하는 마이그레이션을 위한 메서드
+    private boolean isSignedUserButEmailNotSaved(String userSocialId) {
+        return isAlreadySignedUser(userSocialId) && userRepository.findBySocialId(userSocialId).get().getEmail() == null;
     }
 
     @Transactional
