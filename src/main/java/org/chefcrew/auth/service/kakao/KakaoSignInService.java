@@ -57,10 +57,12 @@ public class KakaoSignInService {
             // HTTP Body 생성
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             String redirectUri = selectRedirectUri(domainName);
+            log.error("리다이렉트 "+redirectUri);
             body.add(HTTPConstants.GRANT_TYPE, HTTPConstants.GRANT_TYPE_AUTHORIZATION_CODE);
             body.add(HTTPConstants.CLIENT_ID, KAKAO_CLIENT_ID);
             body.add(HTTPConstants.REDIRECT_URI, redirectUri);
             body.add(HTTPConstants.CODE, code);
+            log.error("일단 통신직전까지는 됨 여기 들어옴");
 
             // HTTP 요청 보내기
             HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
@@ -100,11 +102,16 @@ public class KakaoSignInService {
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap profileResponse = (HashMap) objectMapper.convertValue(responseData.getBody(), Map.class)
                 .get(HTTPConstants.RESPONSE_PROPERTIES);
+        HashMap kakaoAccountResponse = (HashMap) objectMapper.convertValue(responseData.getBody(), Map.class)
+                .get(HTTPConstants.RESPONSE_KAKAO_ACCOUNT);
+        log.error(kakaoAccountResponse.get(HTTPConstants.RESPONSE_EMAIL).toString());
         return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(),
                 profileResponse == null || profileResponse.get(HTTPConstants.RESPONSE_PROFILE_IMAGE) == null ? null
                         : profileResponse.get(HTTPConstants.RESPONSE_PROFILE_IMAGE).toString(),
                 profileResponse == null || profileResponse.get(HTTPConstants.RESPONSE_NICKNAME) == null ? null
-                        : profileResponse.get(HTTPConstants.RESPONSE_NICKNAME).toString()); //프로필 이미지 허용 x시 null값으로 넘김
+                        : profileResponse.get(HTTPConstants.RESPONSE_NICKNAME).toString(),
+                profileResponse == null || kakaoAccountResponse.get(HTTPConstants.RESPONSE_EMAIL) == null ? null
+                        : kakaoAccountResponse.get(HTTPConstants.RESPONSE_EMAIL).toString()); //프로필 이미지 허용 x시 null값으로 넘김
     }
 
     public String withdrawKakao(String socialId) {

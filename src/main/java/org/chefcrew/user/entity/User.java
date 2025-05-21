@@ -33,12 +33,16 @@ public class User {
     @Column(nullable = true)
     private String profile;
 
+    @Column(nullable = true)
+    private String email;
+
     @Builder
-    public User(String nickname, String socialId, String refreshToken, String profile) {
+    public User(String nickname, String socialId, String refreshToken, String profile, String email) {
         this.nickname = nickname;
         this.socialId = socialId;
         this.refreshToken = refreshToken;
         this.profile = profile;
+        this.email = email;
     }
 
     public void updateRefreshToken(String refreshToken) {
@@ -51,5 +55,9 @@ public class User {
 
     public void updateProfile(String profile) {
         this.profile = profile;
+    }
+
+    public void updateEmail(String email) {
+        this.email = email;
     }
 }
