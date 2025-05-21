@@ -37,4 +37,12 @@ public class OwnRecipeRepository {
         em.flush();
     }
 
+    public boolean existRecipeByIdAndRecipeId(long userId, long recipeId) {
+        return query.selectOne()
+                .from(ownRecipe)
+                .where(ownRecipe.userId.eq(userId)
+                        .and(ownRecipe.recipeId.eq(recipeId)))
+                .fetchFirst() != null;
+    }
+
 }

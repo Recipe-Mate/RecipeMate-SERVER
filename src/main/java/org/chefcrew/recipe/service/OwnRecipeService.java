@@ -29,4 +29,8 @@ public class OwnRecipeService {
         ownRecipeRepository.deleteAllById(foods.stream().map(
                 (OwnRecipe::getId)).collect(Collectors.toList()));
     }
+
+    public boolean isAlreadyUserOwnedRecipe(long userId, long recipeId) {
+        return ownRecipeRepository.existRecipeByIdAndRecipeId(userId, recipeId);
+    }
 }
