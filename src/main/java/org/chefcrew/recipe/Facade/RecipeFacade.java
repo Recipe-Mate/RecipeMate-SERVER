@@ -48,7 +48,9 @@ public class RecipeFacade {
             }
         }
         //소유 관계 저장
-        ownRecipeService.saveOwnData(new OwnRecipe(userId, savedRecipeInfo.getId()));
+        if (!ownRecipeService.isAlreadyUserOwnedRecipe(userId, savedRecipeInfo.getId())) {
+            ownRecipeService.saveOwnData(new OwnRecipe(userId, savedRecipeInfo.getId()));
+        }
     }
 
     public GetUsedRecipeListResponse getUsedRecipeList(long userId) {
