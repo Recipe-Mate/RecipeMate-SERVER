@@ -21,7 +21,7 @@ public class UserService {
         if (user == null) {
             throw new CustomException(USER_NOT_FOUND);
         }
-        return new GetUserInfoResponse(user.getNickname(), user.getProfile());
+        return new GetUserInfoResponse(user.getNickname(), user.getProfile(), user.getEmail());
     }
 
 /*
