@@ -60,9 +60,15 @@ public class AuthService {
                     .build();
             userRepository.save(newUser);
 
-        } else if (isSignedUserButEmailNotSaved(socialId)) {
+        } else if (isAlreadySignedUser(socialId)) {
             userRepository.findBySocialId(socialId).ifPresent(user -> {
-                user.updateEmail(email);
+                if(isSignedUserButEmailNotSaved(socialId) || !user.getEmail().equals(email)){
+                    user.updateEmail(email);
+                }
+                if(!user.getProfile().equals(profileImage)) {
+                    user.updateProfile(profileImage);
+                }
+
             });
         }
 
@@ -74,11 +80,7 @@ public class AuthService {
         String refreshToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_REFRESH, REFRESH_TOKEN);
 
         user.updateRefreshToken(refreshToken);
-        user.updateProfile(BASIC_ROOT + BASIC_THUMBNAIL);
 
-        if (nickname != null) {
-            user.updateNickname(nickname);
-        }
         return SignInResponse.of(user.getUserId(), accessToken, refreshToken, isAlreadySignedUser(socialId),
                 user.getProfile());
     }
