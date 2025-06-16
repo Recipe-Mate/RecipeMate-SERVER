@@ -43,10 +43,10 @@ RecipeMate 백엔드는 프론트엔드와 OCR, AI 모델의 후처리 과정을
 ```
 
 ## **System architecture**
-![Image](https://github.com/user-attachments/assets/3a0edc70-319f-42ba-b31e-45aba937c9d4)
+![Image](https://github.com/user-attachments/assets/1ff22a17-30b3-4a52-84c9-73a57f92c498)
 
 ## **ER Diagram**
-<img src="https://github.com/user-attachments/assets/d03961dd-c929-4d28-93f5-efcc8c055bdc"/>
+![Image](https://github.com/user-attachments/assets/dfeee1a8-82ca-4441-a626-f5f0dc7bc3dc)
 
 ## **API Docs**
 - 회원가입, 로그인, 유저 정보 조회
