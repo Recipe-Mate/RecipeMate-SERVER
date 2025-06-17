@@ -49,6 +49,7 @@ RecipeMate 백엔드는 프론트엔드와 OCR, AI 모델의 후처리 과정을
 ![Image](https://github.com/user-attachments/assets/dfeee1a8-82ca-4441-a626-f5f0dc7bc3dc)
 
 ## **API Docs**
+[**🔗RecipeMate-BE 바로가기**](https://broad-furniture-095.notion.site/api-215bf26cec1b80d5a988cb0a028c2ad8?pvs=73)
 - 회원가입, 로그인, 유저 정보 조회
 - 구매한 식재료 추가, 삭제, 조회
 - 특정 식재료와 식습관 목표에 적합한 레시피 검색
