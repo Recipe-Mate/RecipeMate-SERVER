@@ -1,9 +1,14 @@
 version: 0.0
 os: linux
 
+# jar 파일과 스크립트 파일만 업로드하도록
 files:
-  - source: /
+  - source: *.jar
     destination: /home/ubuntu/recipemate
+    file_exists_behavior: OVERWRITE
+
+  - source: scripts/
+    destination: /home/ubuntu/recipemate/scripts
     file_exists_behavior: OVERWRITE
 
 hooks:
