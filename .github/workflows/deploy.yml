@@ -21,9 +21,11 @@ jobs:
           distribution: adopt
           java-version: 17
 
-      # 3. scripts 실행 권한 부여
-      - name: Grant execute permission for scripts
-        run: chmod +x scripts/*.sh
+      # 3. gradlew & scripts 실행 권한 부여
+      - name: Grant execute permission
+        run: |
+          chmod +x gradlew
+          chmod +x scripts/*.sh
 
       # 4. Gradle 빌드
       - name: Build with Gradle
